@@ -1,0 +1,1572 @@
+/*
+Estilos generales 
+Etiquetas basicas 
+*/
+article, footer, header, section {
+	display: block;
+	behavior: url(/ebac/js/module/transfer/PIE.htc);
+}
+/* Etiquetas de sub menu (tipo de cuentas) */
+span#label_type_account {
+	height: 15px;
+	width: 120px;
+	margin: 1px 0 0 5px;
+}
+
+span#label_own_accounts {
+	height: 15px;
+	width: 120px;
+	margin: 1px 0 0 5px;
+}
+
+span#label_preregistered_accounts {
+	height: 15px;
+	width: 180px;
+	margin: 1px 0 0 5px;
+}
+
+span#label_favorite {
+	height: 15px;
+	width: 140px;
+	margin: 1px 0 0 5px;
+}
+
+span#label_bac_mobile {
+	height: 15px;
+	width: 125px;
+	margin: 1px 0 0 5px;
+}
+
+a:link {
+	text-decoration: none
+}
+
+a:visited {
+	text-decoration: none
+}
+
+a:active {
+	text-decoration: none
+}
+
+a:hover {
+	text-decoration: none
+}
+
+p.inicial {
+	margin-top: 20px;
+}
+
+p.fin {
+	margin-bottom: 0px;
+}
+
+.sectioninfo input, .sectionmulti input {
+	height: 30px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	border-width: 1px;
+	border: 1px solid #B3B4B4;
+	font-family: Arial;
+	font-size: 13px;
+	color: #666;
+	width: 100px;
+}
+
+.sectioninfo
+ 
+p
+ 
+input
+,
+.sectionmulti
+ 
+p
+ 
+input
+,
+{
+margin-left
+:
+ 
+5
+px
+;
+
+
+}
+.sectioninfo textarea, .sectionmulti textarea {
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	border: 1px solid #B3B4B4;
+	font-family: Arial;
+	font-size: 13px;
+	color: #666;
+	resize: none;
+}
+
+nav {
+	width: 100%;
+}
+
+nav ul {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	white-space: nowrap;
+}
+
+nav li {
+	display: table-cell;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	width: 100%;
+	height: 100%;
+}
+
+nav li:hover {
+	color: fff;
+}
+
+section {
+	font-family: Arial;
+	font-size: 13px;
+	color: #666;
+	text-decoration: none;
+	width: 100%;
+}
+
+select option {
+	font-family: Arial;
+	font-size: 13px;
+	color: #666;
+}
+/*
+Secciones internas
+*/
+.seccionbottom {
+	background: url("/ebac/images/module/transfer/bottom_left_edge.png");
+	background-repeat: no-repeat;
+	margin-left: 4px;
+	height: 27px;
+	margin-top: 20px;
+}
+
+.seccionbottom_center {
+	background: url("/ebac/images/module/transfer/bottom_center_edge.png");
+	background-repeat: no-repeat;
+	margin-left: 4px;
+	height: 27px;
+}
+
+section#head {
+	height: 50px;
+}
+
+.sectioninfo {
+	margin-left: 60px;
+	width: 650px;
+}
+
+.sectioninfoPositionFix {
+	margin-left: 0px !important;
+	width: 746px;
+}
+
+.sectioninfo p, .sectionmulti p {
+	margin-left: 10px;
+}
+
+.sectioninfo span, .sectionmulti span {
+	font-weight: bold;
+	margin-left: 5px;
+	text-transform: none;
+}
+
+.sectioninfo span.tableData, .sectionmulti span.tableData {
+	font-weight: normal;
+	font-size: 10px;
+	color: #666;
+	margin-left: 10px;
+}
+
+.sectioninfo span.normal, .sectionmulti span.normal {
+	font-family: Arial;
+	font-weight: normal;
+	font-size: 13px;
+	color: #666;
+	text-decoration: none;
+	width: 100%;
+}
+
+.sectiondetail {
+	margin-left: 12px;
+}
+
+.sectiondetail span.subt {
+	font-weight: bold;
+	margin: 65px;
+}
+
+.sectioninfo select, .sectionmulti select, .sectionmulti select_small,
+	.sectioninfo select_small {
+	margin-left: 10px;
+	padding: 3px 0px 3px 0px;
+	margin-top: 11px;
+}
+
+.sectiondetail table {
+	font-size: 10px;
+	text-align: left;
+	width: 92%;
+}
+
+.sectiondetail #agregar {
+	margin-left: 60px;
+}
+
+.sectiondetail table th {
+	background-color: #cccccb;
+	color: #FFFFFF;
+	height: 10px;
+}
+
+.sectiondetail table td, .sectiondetail table th {
+	height: 32px;
+}
+
+.sectiondetail table input {
+	background-color: #cccccb;
+	border: none;
+}
+
+.sectiondetail table img {
+	text-align: center;
+}
+
+.process {
+	color: #666;
+	float: right;
+	width: 260px;
+	top: 0;
+}
+
+.process .status {
+	font-weight: bold;
+}
+
+.sub_title {
+	float: left;
+}
+
+#resultstable td {
+	height: auto;
+}
+
+/* 
+Pie de la pagina 
+*/
+.pie {
+	margin-top: 50px;
+}
+
+.pie div {
+	text-align: center;
+}
+
+.pie div input {
+	margin: 5px;
+}
+
+.contentLink a {
+	font-family: Arial;
+	font-size: 11px;
+	color: #666666;
+}
+
+/*
+Formulario estilo MODAL 
+*/
+#basic-modal-content {
+	display: none;
+}
+
+#simplemodal-overlay {
+	background-color: #000;
+	cursor: wait;
+}
+
+#simplemodal-container {
+	height: 460px;
+	width: 600px;
+	background-color: #fff;
+	border: 2px solid #5E5753;
+	padding: 12px;
+}
+
+#simplemodal-container .simplemodal-data {
+	padding: 8px;
+}
+
+#simplemodal-container code {
+	background: #141414;
+	border-left: 3px solid #65B43D;
+	color: #bbb;
+	display: block;
+	font-size: 12px;
+	margin-bottom: 12px;
+	padding: 4px 6px 6px;
+}
+
+#simplemodal-container a {
+	color: #ddd;
+}
+
+section#modal {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #5E5753;
+	text-transform: none;
+}
+
+section#modal .nota {
+	font-size: 9px;
+	text-transform: none;
+}
+
+section#modal .btn {
+	margin-top: 20px;
+}
+
+section#modal span.alert {
+	color: #C80000;
+	font-size: 9px;
+}
+
+/*
+Estilo de elementos radio, checkbox y selects 
+*/
+.checkbox, .radio {
+	width: 30px;
+	height: 25px;
+	padding: 0 5px 0 0;
+	background: url(/ebac/images/module/transfer/checkbox.png) no-repeat;
+	display: inline-block;
+}
+
+.select {
+	position: absolute;
+	width: 292px;
+	/* With the padding included, the width is 190 pixels: the actual width of the image. */
+	height: 25px;
+	padding: 5px 24px 0 5px;
+	font-weight: normal;
+	font-size: 13px;
+	color: #666;
+	background: url(/ebac/images/module/transfer/selectLarge.png) no-repeat;
+	overflow: hidden;
+}
+
+.sectioninfo span.select_small, .sectionmulti span.select_small {
+	position: absolute;
+	width: 300px;
+	/* With the padding included, the width is 190 pixels: the actual width of the image. */
+	height: 40px;
+	padding: 5px 24px 0 5px;
+	font-weight: normal;
+	font-size: 13px;
+	color: #666;
+	background: url(/ebac/images/module/transfer/selectSmall.png) no-repeat;
+	overflow: hidden;
+	font-weight: normal;
+}
+
+.opt {
+	margin-left: 90px;
+}
+
+span.select {
+	font-weight: normal;
+	padding-top: 10px;
+	padding-left: 10px;
+}
+
+span.tableTitle {
+	margin-left: 15px
+}
+
+.sectioninfo input, .sectioninfo textarea {
+	margin-left: 5px;
+}
+
+.sectioninfoPositionFix input {
+	margin-left: 0px;
+	border-radius: 0px;
+	width: 376px !important;
+	padding-left: 10px;
+}
+
+.sectioninfoPositionFix p {
+	margin-left: 0px;
+}
+
+div.area_botones {
+	text-align: center;
+	margin-bottom: 1em;
+}
+
+div.contentLink {
+	top: 0;
+	float: right;
+}
+
+/*Menu con 1 opciones*/
+div.menu_transfer_linkTop1 {
+	background: url(/ebac/images/module/transfer/opt_a1.jpg) no-repeat;
+	width: 749px;
+	height: 90px;
+}
+
+a.menu_transfer_linkTop1:hover div.menu_transfer_linkTop1, div.menu_transfer_linkTop1:hover
+	{
+	background: url(/ebac/images/module/transfer/opt_o1.jpg) no-repeat;
+	width: 749px;
+	height: 90px;
+}
+
+div.menu_transfer_linkTopSelected1 {
+	background: url(/ebac/images/module/transfer/opt_o1.jpg) no-repeat;
+	width: 749px;
+	height: 90px;
+}
+
+/*Menu con 2 opciones*/
+div.menu_transfer_linkTop2 {
+	background: url(/ebac/images/module/transfer/opt_a2.jpg) no-repeat;
+	width: 372px;
+	height: 90px;
+}
+
+a.menu_transfer_linkTop2:hover div.menu_transfer_linkTop2, div.menu_transfer_linkTop2:hover
+	{
+	background: url(/ebac/images/module/transfer/opt_o2.jpg) no-repeat;
+	width: 372px;
+	height: 90px;
+}
+
+div.menu_transfer_linkTopSelected2 {
+	background: url(/ebac/images/module/transfer/opt_o2.jpg) no-repeat;
+	width: 372px;
+	height: 90px;
+}
+
+/*Menu con 3 opciones*/
+div.menu_transfer_linkTop3 {
+	background: url(/ebac/images/module/transfer/opt_a3.jpg) no-repeat;
+	width: 248px;
+	height: 91px;
+}
+
+a.menu_transfer_linkTop3:hover div.menu_transfer_linkTop3, div.menu_transfer_linkTop3:hover
+	{
+	background: url(/ebac/images/module/transfer/opt_o3.jpg) no-repeat;
+	width: 248px;
+	height: 91px;
+}
+
+div.menu_transfer_linkTopSelected3 {
+	background: url(/ebac/images/module/transfer/opt_o3.jpg) no-repeat;
+	width: 248px;
+	height: 91px;
+}
+
+/*Menu con 4 opciones*/
+div.menu_transfer_linkTop4 {
+	background: url(/ebac/images/module/transfer/opt_a4.jpg) no-repeat;
+	width: 186px;
+	height: 90px;
+}
+
+a.menu_transfer_linkTop4:hover div.menu_transfer_linkTop4, div.menu_transfer_linkTop4:hover
+	{
+	background: url(/ebac/images/module/transfer/opt_o4.jpg) no-repeat;
+	width: 186px;
+	height: 90px;
+}
+
+div.menu_transfer_linkTopSelected4 {
+	background: url(/ebac/images/module/transfer/opt_o4.jpg) no-repeat;
+	width: 186px;
+	height: 90px;
+}
+
+/*Menu con 5 opciones*/
+div.menu_transfer_linkTop5 {
+	background: url(/ebac/images/module/transfer/opt_a5.jpg) no-repeat;
+	width: 149px;
+	height: 91px;
+}
+
+a.menu_transfer_linkTop5:hover div.menu_transfer_linkTop5, div.menu_transfer_linkTop5:hover
+	{
+	background: url(/ebac/images/module/transfer/opt_o5.jpg) no-repeat;
+	width: 149px;
+	height: 91px;
+}
+
+div.menu_transfer_linkTopSelected5 {
+	background: url(/ebac/images/module/transfer/opt_o5.jpg) no-repeat;
+	width: 149px;
+	height: 91px;
+}
+
+/*Menu con 6 opciones*/
+div.menu_transfer_linkTop6 {
+	background: url(/ebac/images/module/transfer/opt_a6.jpg) no-repeat;
+	width: 124px;
+	height: 92px;
+}
+
+a.menu_transfer_linkTop6:hover div.menu_transfer_linkTop6, div.menu_transfer_linkTop6:hover
+	{
+	background: url(/ebac/images/module/transfer/opt_o6.jpg) no-repeat;
+	width: 124px;
+	height: 92px;
+}
+
+div.menu_transfer_linkTopSelected6 {
+	background: url(/ebac/images/module/transfer/opt_o6.jpg) no-repeat;
+	width: 124px;
+	height: 92px;
+}
+
+div.menu_transfer {
+	cursor: pointer;
+}
+
+a.menu_transfer {
+	text-decoration: none;
+	cursor: pointer;
+}
+
+a.menu_transfer strong {
+	position: relative;
+	top: 45%;
+	text-decoration: none;
+	font-family: Arial;
+	font-size: 13px;
+	color: #666;
+	font-weight: bold;
+}
+
+hr {
+	background: #ccc;
+}
+
+/*Seccion de confirmacion*/
+span.noti {
+	font-family: Arial;
+	font-size: 13px;
+	color: #666;
+}
+
+div.tableTitle {
+	font-family: Arial;
+	font-size: 13px;
+	color: #666;
+	font-weight: bold;
+}
+
+td.tableData {
+	font-family: Arial;
+	font-size: 13px;
+	color: #666;
+	word-wrap: break-word;
+}
+
+span.tableData {
+	font-family: Arial;
+	font-size: 13px;
+	color: #666;
+}
+
+tr#mailIndex_1 td.tableData {
+	width: 400px;
+}
+
+span.error {
+	margin-top: 5px;
+	font-family: Arial;
+	font-size: 10px;
+	color: #C80000;
+}
+
+span.error_ajax {
+	margin-top: 5px;
+	font-family: Arial;
+	font-size: 13px;
+	color: #C80000;
+}
+
+.backgroundColor {
+	background: #ccc
+}
+
+.backgroundWhite {
+	background: #fff
+}
+/*Seccion de multiples*/
+.modal_botton {
+	text-align: right;
+}
+
+#resultstable th {
+	font-family: Arial;
+	font-size: 13px;
+	text-align: center;
+	height: 40px;
+	vertical-align: middle;
+	background: #CCC;
+	color: #FFF;
+}
+
+.sectiontitle {
+	color: #C80000;
+	font-family: Arial;
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 0;
+	margin-top: 0;
+	text-decoration: none;
+	text-transform: none;
+}
+
+div#accountValidationMsg {
+	margin-top: 5px;
+}
+
+div#sinpe_regulation {
+	margin-left: 25px;
+	margin-right: 25px;
+	text-align: justify;
+}
+
+div#regulation {
+	margin-left: 25px;
+	margin-right: 25px;
+	text-align: justify;
+}
+
+.emptytext {
+	font-family: Arial;
+	font-size: 13px;
+	font-weight: normal;
+	color: darkgray;
+	text-decoration: none;
+	margin-top: 0px;
+	padding-top: 0px;
+}
+
+/*Seccion de confirmacion*/
+#firstCombination, #secondCombination, #thirdCombination {
+	width: 40px;
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+}
+
+#thirdCombination {
+	margin-right: 4px;
+}
+
+input.input_large {
+	width: 268px;
+}
+
+span.linkMessage {
+	font-size: 10px;
+	font-family: Arial;
+	color: #666666;
+	text-decoration: none;
+	font-weight: normal;
+}
+
+span.linkMessage {
+	font-size: 10px;
+	font-family: Arial;
+	color: #666666;
+	text-decoration: none;
+	font-weight: normal;
+}
+
+.msg_account_sinpe {
+	font-size: 10px;
+	font-family: Arial;
+	color: green;
+	text-decoration: none;
+	font-weight: normal;
+}
+
+div.errorMessage {
+	font-size: 10px;
+	font-family: Arial;
+	color: #C80000;
+	text-decoration: none;
+	font-weight: bold;
+	text-transform: none;
+}
+
+span.errorMessageFavorite {
+	font-size: 10px;
+	font-family: Arial;
+	color: #3366CC;
+	text-decoration: none;
+	font-weight: bold;
+	text-transform: none;
+}
+/*Sub menu ACH*/
+#subMenuACH {
+	width: 345px;
+	height: 43px;
+	text-decoration: none;
+}
+
+.calendario {
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	border-width: 1px;
+}
+
+span.msg_info_preregistro {
+	font-size: 10px;
+	margin-left: 16px;
+	font-weight: normal;
+	color: #666666;
+}
+
+div.favorites {
+	height: 50px;
+}
+
+.fav_ {
+	float: left;
+}
+
+.fav_help {
+	width: 44px;
+	top: 0;
+	height: 40px;
+}
+
+.redInfoMessage {
+	font-size: 10px;
+	font-family: Arial;
+	color: #C80000;
+	text-decoration: none;
+	font-weight: bold;
+	text-transform: none;
+}
+
+.div_error {
+	margin-left: 10px
+}
+
+.divError {
+	margin-left: 10px
+}
+
+input.alternateDestinyAccount_incomming {
+	width: 200px;
+	margin-left: 12px;
+}
+
+input.destinyName_ {
+	width: 200px;
+}
+
+.resultsTableTitle {
+	font-family: Arial;
+	font-size: 13px;
+	color: #666;
+}
+
+.tabletitle {
+	font-family: Arial;
+	font-size: 13px;
+	color: #666;
+}
+
+div#showFileContainer1 {
+	padding-left: 5px;
+}
+
+/******************************************************************************/
+.cbacSection {
+	text-align: center;
+	float: center;
+	width: 90%;
+}
+
+.cbacSelected {
+	width: 190px;
+	height: 130px;
+	border-radius: 10px;
+	border: 2px solid #BBB;
+	background-image: url("/ebac/images/module/migration/cbac.png");
+	background-repeat: no-repeat;
+}
+
+.cbacSMSSelected {
+	width: 174px;
+	height: 134px;
+	border-radius: 10px;
+	border: 2px solid #BBB;
+	background-image: url("/ebac/images/module/migration/cbac-sms.png");
+	background-repeat: no-repeat;
+	background-position: center right;
+	margin-left: 10px;
+}
+
+.cbacSMSSelected-hover {
+	width: 174px;
+	height: 134px;
+	border-radius: 10px;
+	border: 2px solid #BBB;
+	background-image:
+		url("/ebac/images/module/migration/cbac-sms-hover.png");
+	background-repeat: no-repeat;
+	background-color: #f3f3f4;
+}
+
+.cbacAppSelected {
+	width: 190px;
+	height: 130px;
+	border-radius: 10px;
+	border: 2px solid #BBB;
+	margin-left: 10px;
+	background-image: url("/ebac/images/module/migration/cbac-app.png");
+	background-repeat: no-repeat;
+	background-position: center right;
+}
+
+.cbacButtonContinue {
+	float: right;
+	margin-top: 20px;
+	margin-left: 20px;
+	cursor: pointer;
+}
+
+/* ******************* cbacInformationPage ******************* */
+.cbacImage {
+	width: 190px;
+	height: 140px;
+	border-radius: 10px;
+	background-image: url("/ebac/images/module/migration/cbac-hover.png");
+}
+
+.cbacSMSImage {
+	width: 174px;
+	height: 134px;
+	border-radius: 10px;
+	background-image:
+		url("/ebac/images/module/migration/cbac-sms-hover.png");
+}
+
+.cbacImageApp {
+	width: 190px;
+	height: 140px;
+	border-radius: 10px;
+	border: 3px solid green;
+	margin-left: 190px;
+	background-image: url("/ebac/images/module/migration/cbac-app.png");
+}
+
+.cbacImageApp-hover {
+	width: 190px;
+	height: 140px;
+	border-radius: 10px;
+	border: 3px solid green;
+	margin-left: 190px;
+	background-image:
+		url("/ebac/images/module/migration/cbac-app-hover.png");
+}
+
+#cbacQrIos {
+	width: 50px;
+	float: center;
+	padding-right: 50px;
+}
+
+#cbacQrAndroid {
+	width: 50px;
+	float: center;
+	padding-left: 50px;
+}
+
+#cbacStoreIconIos {
+	padding-left: 5px;
+}
+
+#cbacStoreIconAndroid {
+	padding-left: 55px;
+}
+
+#cbacBtnContinue {
+	float: center;
+	padding-left: 300px;
+	padding-top: 10px;
+}
+
+/* CRI-19595 Enrollment online */
+.textErrorInformation {
+	background: url(/ebac/images/module/mafi/iconos-historico-error.png)
+		no-repeat 2px center;
+	margin-left: 10px;
+	padding-left: 20px;
+	font-size: 12px;
+	color: #6D6E71;
+	margin-bottom: 30px;
+	text-align: justify;
+}
+
+.createUserInfoComponent {
+	border: 1px solid #38A9DE;
+	height: 55px;
+	margin: 10px 0px 50px 112px;
+	text-align: center;
+	width: 591px;
+}
+
+.createUserInfoIcon {
+	background: #38A9DE
+		url("/ebac/ebac2.0/images/common/icons/info-icon.png") no-repeat
+		scroll center center;
+	height: 55px;
+	width: 55px;
+	float: left;
+	margin: 10px 0px 50px 50px;
+	border: 1px solid #38A9DE;
+}
+
+.createUserInfoBox {
+	color: #707070;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	height: 55px;
+	margin-left: 65px;
+	text-align: left;
+	width: 591px;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.checkBoxInfo {
+	color: #707070 !important;
+	text-align: left;
+	border-top: 10px;
+}
+
+.createUserInfoText {
+	display: inline-block;
+	text-align: left;
+	padding-left: 15px;
+	padding-bottom: 0px;
+	line-height: 18px;
+}
+
+#selectedUserStyle, .selectedUser {
+	color: #0071BC;
+	font-weight: bold;
+	margin-left: 247px;
+	margin-top: -12px;
+}
+
+#bacCodeSubTittle {
+	margin-bottom: 10px;
+}
+
+#helperUserMessage {
+	color: #909294;
+	font-family: Arial;
+	font-size: 12px;
+	left: 50px;
+	margin-top: 60px;
+	position: relative;
+}
+
+#positionAbsolute {
+	position: absolute;
+}
+
+.fixPosition {
+	width: 366px !important;
+	text-align: justify;
+	position: relative;
+	left: 65px !important;
+	top: -70px;
+	line-height: 1.4;
+	height: 60px;
+	color: #909294;;
+}
+
+/* LOADING DIALOG & COMFIRM POPUP (earaya-interfaz)
+================================================ */
+#loading-lock-dialog {
+	width: 100%;
+	height: 100%;
+	z-index: 10;
+	position: fixed;
+	left: 0%;
+	top: 0%;
+	background-color: #000000;
+	opacity: 0.5;
+	filter: alpha(opacity = 50); /* works for IE 8. */
+	display: block;
+}
+
+#dialog-lock-content, #dialog-lock-content_1 {
+	background-color: white;
+	text-align: center;
+	box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.2);
+	border-radius: 3px;
+	font-size: 24px;
+	z-index: 15;
+	opacity: 0.98;
+	filter: alpha(opacity = 98); /* works for IE 8. */
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	width: 400px;
+	margin-left: -200px; /* Mitad del width */
+	height: 223px;
+	margin-top: -100px; /* Mitad del heght */
+	display: block;
+}
+
+#dialog-lock-centrar {
+	position: relative;
+	text-align: center;
+	top: 50%;
+	left: 50%;
+	width: 360px;
+	margin-left: -180px; /* Mitad del width */
+	height: 120px;
+	margin-top: -60px; /* Mitad del heght */
+}
+
+/*estilos del mensaje personalizado de validador: unico flujo de enrollment*/
+#enrollmentWatchmanInternalCont {
+	position: relative;
+	text-align: center;
+	top: 24%;
+	left: 50%;
+	width: 360px;
+	margin-left: -180px;
+	height: 120px;
+	margin-top: -60px;
+}
+	
+.enrollmentWatchmanText {
+    padding-bottom: 10px;
+    font-size: 14px;
+    margin-left: 56px;
+    line-height: 18px;
+    width: 295px;
+    font-family: Helvetica, Arial, sans-serif;
+	color: #6D6E71;
+	font-weight: regular;
+	text-align: center;
+	line-height: 22px !important;
+}
+
+.enrollmentWatchmanBtn{
+	width: 132px!important;
+}
+
+.enrollmentWatchmanBtnContainer{
+	margin-left:6px!important;
+}
+
+#dialog-lock-image {
+
+	background-image:  url("/ebac/ebac2.0/images/common/icons/loading.gif");
+	background-repeat:no-repeat;
+	background-color:white;	
+		
+	background-size: 100% 100%;
+	margin: auto;
+	height: 40px;
+	width: 40px;
+}
+
+.load-image-fix{
+	background: white url("/ebac/ebac2.0/images/common/icons/loading") no-repeat !important;
+}
+
+.load-image {
+	background: white url("/ebac/ebac2.0/images/common/icons/loading.gif") no-repeat !important;
+}
+
+#dialog-lock-title, #dialog-lock-title_1 {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 16px;
+	color: #394457;
+	font-weight: bold;
+	margin-top: 35px;
+	margin-bottom: 15px;
+}
+
+#dialog-lock-title_1 {
+	margin-top: -20px !important;
+}
+
+#dialog-lock-text, #dialog-lock-text_1, #dialog-lock-text_2,
+	#dialog-lock-text_3, #dialog-lock-text_4 {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 12px;
+	color: #6D6E71;
+	font-weight: regular;
+	margin-bottom: 30px;
+	text-align: center;
+}
+
+#dialog-lock-text_1 {
+	padding-top: 10px !important;
+}
+
+#dialog-lock-text_2 {
+	width: 310px !important;
+	padding-left: 48px !important;
+	margin-bottom: 20px !important;
+	line-height: 18px !important;
+}
+
+#dialog-lock-text_3 {
+	margin-bottom: 13px !important;
+}
+
+#dialog-lock-text_4 {
+    font-size: 14px;
+    margin-left: 25px;
+    line-height: 18px;
+    width: 290px;
+}
+
+#dialog-close-button {
+	background: white
+		url("/ebac/ebac2.0/images/common/icons/close-icon-alert.png")
+		no-repeat;
+	cursor: pointer;
+	height: 12px;
+	left: 380px;
+	position: absolute;
+	text-align: center;
+	top: 10px;
+	width: 12px;
+}
+
+#dialog-close-button:HOVER {
+	background: white url("/ebac/ebac2.0/images/common/icons/close.png")
+		no-repeat;
+}
+
+#dialog-Ok-button, #dialog-cancel-button, #dialog-Ok-button_1 {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	text-transform: uppercase;
+	border: none;
+	width: 115px;
+	margin-right: 10px;
+	height: 33px;
+	margin: 0px 3px;
+	cursor: pointer;
+	border-radius: 3px;
+	font-weight: bold;
+}
+
+#dialog-Ok-button, #dialog-Ok-button_1 {
+	background-color: #EC3F47;
+	color: #FFF;
+}
+
+#dialog-Ok-button:hover, #dialog-Ok-button_1:hover {
+	background-color: #CA363C;
+}
+
+#dialog-Ok-button_1 {
+	position: relative;
+	padding: 0px !important;
+}
+
+#dialog-cancel-button {
+	color: #394457;
+	background-color: #CDCDCD;
+}
+
+#dialog-cancel-button:hover {
+	background-color: #B3B3B3;
+}
+
+/*================================================ 
+- FIN -  LOADING DIALOG & COMFIRM POPUP  - FIN - */
+
+/* earaya|interfazsoftware*/
+.infoInputContainer {
+	width: 285px;
+	position: relative;
+	margin-top: 20px;
+}
+
+.passInputContainer {
+	width: 285px;
+	position: relative;
+	margin-top: 20px;
+}
+
+.enrollmentAlign {
+	margin: 0 auto;
+}
+
+.enrollmentFooter {
+	table-layout: fixed;
+	border-collapse: collapse;
+	width: 746px;
+	margin: 0 auto;
+}
+
+.enrollmentFooter .newFooter p {
+	font-weight: normal;
+	margin: 0 !important;
+}
+
+.enrollmentFooter td, .enrollmentFooter tr {
+	padding: 0px;
+	width: 746px !important;
+}
+
+.enrollmentTable {
+	table-layout: fixed;
+	border: none;
+	border-collapse: collapse;
+	width: 746px;
+}
+
+.enrollmentTable p {
+	margin: 0;
+}
+
+.enrollmentTable label {
+	margin-bottom: 8px;
+	text-align: left;
+}
+
+.enrollmentTable td, .enrollmentTable tr {
+	padding: 0px !important;
+}
+
+.required-field {
+	margin-top: 20px !important;
+}
+
+.footerBtns {
+	margin: 40px 0;
+	float: right;
+}
+
+.confirmationCodeContainer {
+	border-top: 1px solid #C5C5C5;
+	margin-top: 40px;
+	width: 746px;
+}
+
+.confirmationCodeContainer p {
+	margin-bottom: 30px;
+}
+
+.emailInformation {
+	margin-bottom: 15px !important;
+	width: 400px !important;
+}
+
+.section {
+	width: 746px;
+}
+
+.tooltipMargin15 {
+	margin-bottom: 15px !important;
+}
+
+.tooltipMargin8 {
+	margin-bottom: 8px !important;
+}
+
+.securityStep .securityInput {
+	margin-bottom: 20px;
+}
+
+.securityStep .radio-checkWrapper {
+	margin-top: 25px;
+}
+
+.securityStep .radio-checkWrapper label {
+	margin: 0px 5px 0px 0px !important;
+}
+
+.securityStep .smallText {
+	margin-top: 8px;
+}
+
+.enrollmentLogo {
+	float: left;
+}
+
+.exitEnrollmentBtn {
+	background: url("/ebac/ebac2.0/images/common/icons/exit-icon.png")
+		no-repeat right center;
+	display: block;
+	padding: 2px 20px 2px 0px;
+	float: right;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 10px;
+	color: #6D6E71;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+.modalNoEmailAccessTittle {
+	text-align: center;
+	margin-left: 110px;
+	margin-right: 110px;
+}
+
+.marginLeft40px {
+	margin-left: 40px;
+}
+
+.marginLeft15px {
+	margin-left: 15px;
+}
+
+.marginLeft30px {
+	margin-left: 30px;
+}
+
+.marginButton20px {
+	margin-bottom: 20px !important;
+}
+
+.marginButton30px {
+	margin-bottom: 30px !important;
+}
+
+.marginTop5px {
+	margin-top: 5px !important;
+}
+
+/*.marginLeft-342px {
+	margin-left: -573px\0 !important;
+}
+
+.marginLeft-375px {
+	margin-left: -635px\0 !important;
+}
+
+
+:root .marginLeft-573px {
+	margin-left: -573px \0/IE9;
+}
+
+:root .marginLeft-342px {
+	margin-left: -342px \0/IE9;
+}
+
+
+:root .marginLeft-608px {
+	margin-left: -608px \0/IE9;
+}
+
+:root .marginLeft-375px {
+	margin-left: -375px \0/IE9;
+}*/
+
+:root .comboEnrollmentFixIE {
+	padding: 8px 8px 8px 8px\0 !important;
+}
+
+/* Hack solo IE9 */
+/*@media all and (min-width:0\0) and (min-resolution:.001dpcm) {
+	.marginLeft-342px {
+		margin-left: -342px !important;
+	}
+	
+	.marginLeft-375px {
+		margin-left: -375px !important;
+	}
+}
+*/
+
+.modalSubTitle {
+	margin-left: 15px !important;
+	margin-bottom: 10px !important;
+}
+
+.confirmButtonModal {
+	float: right;
+	margin-bottom: 20px;
+}
+
+.exitButtonModal {
+	margin-left: 54%;
+}
+
+.modalParagraph {
+	margin-left: 30px !important;
+	margin-bottom: 20px !important;
+	margin-right: 30px !important;
+}
+
+.buttonsContainerModal {
+	margin-top: 40px !important;
+}
+
+.link-modal {
+	font-size: 14px !important;
+	margin-top: 0px !important;
+}
+
+.welcome-modal {
+	display: block;
+	position: fixed;
+	z-index: 1;
+	padding-top: 100px;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgb(0, 0, 0);
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.welcome-modal-content {
+	font-family: Helvetica, Arial, sans-sefif;
+	margin: auto;
+	width: 100%;
+}
+
+.header-container {
+	background-color: #394457;
+	width: 100%;
+	height: auto;
+	margin: auto;
+	text-align: center;
+}
+
+.img-succes-style {
+	margin-top: 20px;
+	margin-bottom: 25px;
+	text-align: center;
+}
+
+.element-info-style {
+	text-align: center;
+	margin-bottom: 10px;
+	width: 90%;
+	margin: 15px auto;
+}
+
+.user-name-style {
+	text-align: center;
+	width: 90%;
+	margin: 35px auto;
+}
+
+.header-title {
+	color: #FFFFFF;
+	font-size: 20px;
+	font-weight: bold;
+	padding: 15px 0px;
+	margin: 0px;
+}
+
+.sub-title-style {
+	color: #394457;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.info-style {
+	color: #6D6E71;
+	font-size: 16px;
+}
+
+.user-info {
+	color: #394457;
+	line-height: 24px;
+	font-size: 14px;
+}
+
+.user-name {
+	color: #394457;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.primaryBtn_welcomePage {
+	cursor: pointer;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	text-transform: uppercase;
+	line-height: 33px;
+	height: 33px;
+	text-align: center;
+	border: none;
+	display: block;
+	width: 130px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
+.primaryBtn_welcomePage {
+	background: #F45354;
+	color: #FFFFFF;
+	width: 90%;
+	line-height: 40px;
+	height: 40px;
+	margin: 0 auto;
+}
+
+.container-title {
+	margin: 3em 0 3em 0.5em;
+}
+
+.container-title h1 {
+	font-family: "Graphik", sans-serif;
+	font-weight: bold;
+    font-style: normal;
+	color: #394457;
+	text-align: left;
+	margin: 0;
+}
+
+.container-title p {
+	font-family: "Graphik", sans-serif;
+	font-weight: normal;
+    font-style: normal;
+    font-size: 12px;
+	color: rgb(109, 110, 113);
+	text-align: left;
+	padding-top: 1.5em;
+}
+
+.container-title a {
+	font-weight: bold;
+	color: #1075bb ;
+}

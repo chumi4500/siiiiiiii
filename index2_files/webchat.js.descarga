@@ -1,0 +1,351 @@
+// Widgets genesys Script
+// CRI-19595-0007
+// Autor: aarroyo
+
+var autoInviteEnabled = false;
+var chatButtonEnabled = false;
+var timeToInviteSeconds = 5;
+var inviteTimeoutSeconds = 30;
+var defaultLanguage = "es";
+var autoSubmitEnabled = false;
+var timeZoneValue = "-360";
+var vSubject = " ";
+var cifBCO;
+var cifCOM;
+var emailValidationRegularExpression = /^([a-zA-Z0-9\-_]+)((\.[a-zA-Z0-9\-_]+)*)[@]([a-zA-Z0-9\-_]+)[\.]([a-zA-Z0-9\-_]+)((\.[a-zA-Z0-9\-_]+)*)$/;
+
+function setchatconfig(autoSubmitCustom, chatButtonCustomEnabled,
+		autoInviteCustomState) {
+	if (autoSubmitCustom == "true") {
+		autoSubmitEnabled = true;
+	}
+	if (autoInviteCustomState == "true") {
+		autoInviteEnabled = true;
+	}
+	if (chatButtonCustomEnabled == "true") {
+		chatButtonEnabled = true;
+	}
+}
+
+function setChatTimeSetting(toInviteSecondsCustomTime,
+		inviteTimeoutSecondsCustomTime) {
+	if (typeof toInviteSecondsCustomTime != 'undefined'
+			&& toInviteSecondsCustomTime != null) {
+		timeToInviteSeconds = parseInt(toInviteSecondsCustomTime)
+	}
+	if (typeof inviteTimeoutSecondsCustomTime != 'undefined'
+			&& inviteTimeoutSecondsCustomTime != null) {
+		inviteTimeoutSeconds = parseInt(inviteTimeoutSecondsCustomTime)
+	}
+}
+
+if (typeof language != 'undefined' && language != null) {
+	defaultLanguage = language;
+}
+
+var initLocalWidgetConfiguration = function () {
+	// Global Genesys Object
+    if (!window._genesys)
+        window._genesys = {};
+    if (!window._gt)
+        window._gt = [];
+
+    if (!window._genesys.widgets)
+        window._genesys.widgets = {};
+    
+// intialize widgets config object
+window._genesys.widgets = {
+	main : {
+		debug : true,
+		theme : "light",
+		lang : defaultLanguage,
+		i18n : "/ebac/ebac2.0/js/module/genesys/lang.json",
+		customStylesheetID : "genesys_widgets_custom",
+		plugins : [ "cx-webchat", "cx-webchat-service" ]
+	},
+	webchat : {
+		dataURL : "https://chat.baccredomatic.com/genesys/2/chat/CE18_Digital_Chat",
+		apikey : "",
+		uploadsEnabled: false,
+		actionsMenu: false,
+		emojis: false,
+		ajaxTimeout: 10000,
+		userData: {
+			pfs_id: "573183377899",
+			demoID: "gbank", 
+		    Send_Chat_Transcript : "true",
+		    TimeZone: timeZoneValue
+		},
+
+		autoInvite : {
+			enabled : autoInviteEnabled,
+			timeToInviteSeconds : timeToInviteSeconds,
+			inviteTimeoutSeconds : inviteTimeoutSeconds
+		},
+		chatButton : {
+			enabled : chatButtonEnabled,
+			openDelay : 1000,
+			effectDuration : 300,
+			hideDuringInvite : true
+		}
+	}
+};
+}
+function openGenesysChat() {
+	document.getElementById('cx_webchat_form_identification_number_Chat').value = ""
+	document.getElementById("cx_webchat_form_identification_number_Chat").classList
+			.remove('cx-error');
+	document.getElementById('cx_webchat_form_firstname_Chat').value = ""
+	document.getElementById("cx_webchat_form_firstname_Chat").classList
+			.remove('cx-error');
+	document.getElementById('cx_webchat_form_lastname_Chat').value = ""
+	document.getElementById("cx_webchat_form_lastname_Chat").classList
+			.remove('cx-error');
+	document.getElementById('cx_webchat_form_email_Chat').value = ""
+	document.getElementById("cx_webchat_form_email_Chat").classList
+			.remove('cx-error');
+	document.getElementById('cx_webchat_form_Phone_Chat').value = ""
+	document.getElementById("cx_webchat_form_Phone_Chat").classList
+			.remove('cx-error');
+
+	document.getElementById("genericPrechatId").style.display = "block";
+}
+
+function cancelGenesysChat() {
+	document.getElementById("genericPrechatId").style.display = "none";
+}
+
+function initWidgetPlugin() {
+	oMyPlugin = window._genesys.widgets.bus.registerPlugin('MyPlugin');
+}
+
+function initChat() {
+
+	if (typeof subjectsArray != 'undefined' && subjectsArray != null) {
+		country = country.toLowerCase();
+		vSubject = country.concat("-", subjectsArray);
+	}
+	if (typeof timeZoneCustom != 'undefined' && timeZoneCustom != null) {
+		timeZoneValue = timeZoneCustom;
+	}
+
+	oMyPlugin.command('WebChat.open', {
+		userData : {
+			cif : cifBCO,
+			cif_COM : cifCOM,
+			userId : userId,
+			TimeZone: timeZoneValue
+		},
+		form : {
+			autoSubmit : autoSubmitEnabled,
+			firstname : firstNameInfoChat,
+			lastname : lastNameInfoChat,
+			email : userSessionInfoEmail,
+			subject : vSubject
+		}
+	}).done(function(e) {
+		// WebChat open successfully
+	}).fail(function(e) {
+		// WebChat isn't open or no active chat session
+	});
+}
+
+function startChat() {
+	getCifsUser();
+	var resultArr = subjectsArray.length;
+	if (subjectsArray.length > 11) {
+		document.getElementById("preChatId").style.display = "block";
+	} else {
+		initChat();
+	}
+}
+
+function initChatWithCustomerSubject() {
+	if (document.getElementsByClassName("genesysPreChatdisableBtn").length == 0) {
+		subjectsArray = document.getElementById("webchatSubject").value;
+		document.getElementById("preChatId").style.display = "none";
+		initChat();
+	}
+}
+
+function cancelInitChat() {
+	document.getElementById("preChatId").style.display = "none";
+}
+
+function setSubmitButtonStatus() {
+	if (document.getElementById("webchatSubject").value == "") {
+		// annadir una clase
+		document.getElementById("genesysPreChatBtnId").classList
+				.add('genesysPreChatdisableBtn');
+	} else {
+		// eliminar la clase indicada
+		document.getElementById("genesysPreChatBtnId").classList
+				.remove('genesysPreChatdisableBtn');
+	}
+}
+
+function validateChatHelper() {
+	var isValidRequest = true;
+	if (document.getElementById('cx_webchat_form_firstname_Chat').value != "") {
+		var vFirstnameChat = document
+				.getElementById('cx_webchat_form_firstname_Chat').value;
+		document.getElementById("cx_webchat_form_firstname_Chat").classList
+				.remove('cx-error');
+	} else {
+		document.getElementById("cx_webchat_form_firstname_Chat").classList
+				.add('cx-error');
+		isValidRequest = false;
+	}
+	if (document.getElementById('cx_webchat_form_lastname_Chat').value != "") {
+		var vLastNameChat = document
+				.getElementById('cx_webchat_form_lastname_Chat').value;
+		document.getElementById("cx_webchat_form_lastname_Chat").classList
+				.remove('cx-error');
+	} else {
+		document.getElementById("cx_webchat_form_lastname_Chat").classList
+				.add('cx-error');
+		isValidRequest = false;
+	}
+	if (document.getElementById('cx_webchat_form_email_Chat').value != "") {
+		var regExp = RegExp(emailValidationRegularExpression);
+		if (regExp
+				.test(document.getElementById('cx_webchat_form_email_Chat').value)) {
+			var vEmailAddressChat = document
+					.getElementById('cx_webchat_form_email_Chat').value;
+			document.getElementById("cx_webchat_form_email_Chat").classList
+					.remove('cx-error');
+		} else {
+			document.getElementById("cx_webchat_form_email_Chat").classList
+					.add('cx-error');
+			isValidRequest = false;
+		}
+	} else {
+		document.getElementById("cx_webchat_form_email_Chat").classList
+				.add('cx-error');
+		isValidRequest = false;
+	}
+
+	if (document.getElementById('cx_webchat_form_identification_number_Chat').value != "") {
+		if (isValidAlphanumeric(document
+				.getElementById('cx_webchat_form_identification_number_Chat').value)) {
+			var vIdentificationNumberChat = document
+					.getElementById('cx_webchat_form_identification_number_Chat').value;
+			document
+					.getElementById("cx_webchat_form_identification_number_Chat").classList
+					.remove('cx-error');
+		} else {
+			document
+					.getElementById("cx_webchat_form_identification_number_Chat").classList
+					.add('cx-error');
+			isValidRequest = false;
+		}
+	} else {
+		document.getElementById("cx_webchat_form_identification_number_Chat").classList
+				.add('cx-error');
+		isValidRequest = false;
+	}
+
+	if (document.getElementById('cx_webchat_form_Phone_Chat').value != "") {
+		if (isValidNumber(document.getElementById('cx_webchat_form_Phone_Chat').value)) {
+			var vPhoneChat = document
+					.getElementById('cx_webchat_form_Phone_Chat').value;
+			document.getElementById("cx_webchat_form_Phone_Chat").classList
+					.remove('cx-error');
+		} else {
+			document.getElementById("cx_webchat_form_Phone_Chat").classList
+					.add('cx-error');
+			isValidRequest = false;
+		}
+	} else {
+		document.getElementById("cx_webchat_form_Phone_Chat").classList
+				.add('cx-error');
+		isValidRequest = false;
+	}
+
+	if (typeof subjectsArray != 'undefined' && subjectsArray != null) {
+		country = country.toLowerCase();
+		vSubject = country.concat("-", subjectsArray);
+	}
+
+	if (typeof timeZoneCustom != 'undefined' && timeZoneCustom != null) {
+		timeZoneValue = timeZoneCustom;
+	}
+	
+	if (isValidRequest) {
+		cancelGenesysChat();
+		if(typeof oMyPlugin == 'undefined'){
+			initWidgetPlugin();
+		}		
+		oMyPlugin.command('WebChat.open', {
+			userData : {
+				id : vIdentificationNumberChat,
+				PhoneNumber : vPhoneChat,
+				TimeZone: timeZoneValue
+			},
+
+			form : {
+				autoSubmit : true,
+				firstname : vFirstnameChat,
+				lastname : vLastNameChat,
+				email : vEmailAddressChat,
+				subject : vSubject
+			}
+		}).done(function(e) {
+			// WebChat open successfully
+		}).fail(function(e) {
+			// WebChat isn't open or no active chat session
+		});
+	}
+}
+
+function isValidNumber(number) {
+	isValidNumberResult = true;
+	if (!/^([0-9])*$/.test(number)) {
+		isValidNumberResult = false;
+	}
+	return isValidNumberResult;
+}
+
+function isValidAlphanumeric(alphanumeric) {
+	isValidAlphanumericResult = true;
+	if (!/^([a-zA-Z0-9 _-]+)$/.test(alphanumeric)) {
+		isValidAlphanumericResult = false;
+	}
+	return isValidAlphanumericResult;
+}
+
+
+function cleanErrorStyles(idElement){
+	document.getElementById(idElement).classList
+	.remove('cx-error');
+}
+
+function getCifsUser() {
+	$.ajax({
+			dataType : "json",
+			contentType : "application/x-www-form-urlencoded;charset=UTF-8",
+			cache : false,
+			type : "POST",
+			url : "/ebac/common/getCifsUser.go",
+			data : "",
+			timeout : 3000,
+			async: false,
+
+			// Mostramos un mensaje con la respuesta de Java
+			success : function() {
+			},
+			error : function(XMLHttpRequest) {
+				var result = XMLHttpRequest.responseText;
+				var resultReplace = result.replace(/&quot;/g, '"');
+				var xml = JSON.parse(resultReplace);
+				if (xml) {
+					cifBCO = xml.CIF_BCO;
+					cifCOM = xml.CIF_COM;
+				}
+			},
+			beforeSend : function(xhr) {
+				xhr.overrideMimeType('text/html; charset=UTF-8');
+			}
+		});
+
+}

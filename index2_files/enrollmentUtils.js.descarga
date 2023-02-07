@@ -1,0 +1,148 @@
+// enrollmentUtils.js
+// earaya|Anonymous 03/04/2017
+
+  /**
+   * Cambia el estado de los botones de ayuda
+   * autor Earaya|Interfazsoftware. 03-04-17
+   * @returns {Boolean}
+   */
+  var isTooTipActive = false;
+  function setHelpIconState(iconId, tooltipId, helpBtn){	
+	  var isVisible = document.getElementById(helpBtn).style.display;
+	  if(isVisible == "" || isVisible == 'none'){
+		  $('#'+iconId).removeClass(iconId).addClass(iconId+'-active');
+		  document.getElementById(tooltipId).style.visibility = "visible";
+		  showElementById(helpBtn, true);
+		  isTooTipActive = true;	
+	  }else{
+		  $('#'+iconId).removeClass(iconId+'-active').addClass(iconId);
+		  document.getElementById(tooltipId).style.visibility = "hidden";	
+		  showElementById(helpBtn, false);
+		  isTooTipActive = false;
+	  }
+  } 
+  
+ 
+  
+  function setHelpEmail(){	
+	  var isVisible = document.getElementById('tooltip_email').style.visibility;
+	  if(isVisible == "" || isVisible == 'hidden'){ 
+		  $("#createUserHelpButtonMovile").addClass("tooltip_email_visible");		  
+		  document.getElementById('tooltip_email').style.visibility = 'visible';
+		
+	  } else {
+		  $("#createUserHelpButtonMovile").removeClass("tooltip_email_visible");
+		  document.getElementById('tooltip_email').style.visibility = 'hidden';	
+		
+	  }
+  }
+  
+  
+  function setInviteToCreateUserSubmitForm(formAction, formID){
+	  document.getElementById(formID).action = formAction;
+	  document.getElementById(formID).submit();
+	  	  
+  }
+  
+ var isRememberEmployeeCode = false;
+ function rememberEmployeeCode(){
+	   if(!isRememberEmployeeCode){
+		  $( '#employeeCodeImgId' ).removeClass( "employeeCodeUnchecked" ).addClass( "employeeCodechecked" ); 
+		  saveCookie();
+		  isRememberEmployeeCode = true;	
+	  }else{
+		  $( '#employeeCodeImgId' ).removeClass( "employeeCodechecked" ).addClass( "employeeCodeUnchecked" );
+	      deletCookie();
+		  isRememberEmployeeCode = false;
+	  }
+  }
+  function saveCookie() {
+	  if(document.getElementById("employeeBrach").value != '' ){
+      document.cookie = "employeeBrach="+document.getElementById("employeeBrach").value;
+	  } else {
+		  var readEmployeeBrach = getCookieValue("employeeBrach");
+		  document.cookie = "employeeBrach=" + readEmployeeBrach + "; expires=Thu, 18 Dec 2013 12:00:00 UTC"; 
+	  }
+	  if(document.getElementById("employeeId").value != '' ){
+	  document.cookie = "employeeId="+document.getElementById("employeeId").value;
+	  }  else {
+		  var reademployeeId = getCookieValue("employeeId");
+		  document.cookie = "employeeId=" + reademployeeId + "; expires=Thu, 18 Dec 2013 12:00:00 UTC";
+	  }
+  }
+  
+  function deletCookie() {
+
+	  var readEmployeeBrach = getCookieValue("employeeBrach");
+	  document.cookie = "employeeBrach=" + readEmployeeBrach + "; expires=Thu, 18 Dec 2013 12:00:00 UTC"; 
+	  var reademployeeId = getCookieValue("employeeId");
+	  document.cookie = "employeeId=" + reademployeeId + "; expires=Thu, 18 Dec 2013 12:00:00 UTC";
+  }
+  
+  function readCookie() {
+      var readEmployeeBrach = getCookieValue("employeeBrach");
+	  var reademployeeId = getCookieValue("employeeId");
+    if (readEmployeeBrach) {
+        document.getElementById("employeeBrach").value = readEmployeeBrach;
+    } 
+	 if (reademployeeId) {
+        document.getElementById("employeeId").value = reademployeeId;
+    } 
+	
+	if (readEmployeeBrach || reademployeeId) {
+        $( '#employeeCodeImgId' ).removeClass( "employeeCodeUnchecked" ).addClass( "employeeCodechecked" ); 
+		isRememberEmployeeCode = true;
+    } 
+  }
+  
+  
+  function getCookieValue(nombre) {
+	 var lista = document.cookie.split(";");
+	 for (i in lista) {
+		 var busca = lista[i].search(nombre);
+		 if (busca > -1) {micookie=lista[i]}
+		 }
+	 var igual = micookie.indexOf("=");
+	 var valor = micookie.substring(igual+1);
+	 return valor;
+ }
+  
+  
+  function validateEmployeeCookies(){
+	  var readEmployeeBrach = getCookieValue("employeeBrach");
+	  var reademployeeId = getCookieValue("employeeId");
+	  var isEmployeeCodechecked = document.getElementsByClassName('employeeCodechecked');
+	  if((isEmployeeCodechecked.length > 0) && (readEmployeeBrach != "" || reademployeeId != "")){
+		  saveCookie(); 
+	  }
+	  
+  }
+  
+  function validateJQuery(){
+		 //Valida si JQuery esta indefinido
+		 if(undefined == $ || 'undefined' == typeof $){
+			 	//En caso de que JQuery se esta ejecutando en la variable gloabal wIndow lo tome de ahi
+				if(undefined != window.$j){
+					//Define $ que se ejecuta en window.$j
+					$ = window.$j;
+				//En caso de no tener JQuery cargado se encarga de cargar el archivo de la vesion 1.7.2	
+				}else{
+					//Se crea el tag script con el tipo y la ruta del archivo
+					var jQueryFileScript = document.createElement('script');
+					jQueryFileScript.type='text/javascript';
+					jQueryFileScript.src='/ebac/js/common/jquery-1.7.2.js';
+					jQueryFileScript.async = 1;
+					//Se agrega al body
+					document.getElementsByTagName('body')[0].appendChild(jQueryFileScript);
+					//Metodo que se encarga de cargar el archivo	
+					jQueryFileScript.onload = jQueryFileScript.onreadystatechange = function( _, isAbort ) {
+					    if(isAbort || !jQueryFileScript.readyState || /loaded|complete/.test(jQueryFileScript.readyState) ) {
+					    	jQueryFileScript.onload = jQueryFileScript.onreadystatechange = null;
+					    	jQueryFileScript = undefined;
+					        if(!isAbort) { if(callback) callback(); }
+					   }
+					};
+				}
+			}
+	 }
+  

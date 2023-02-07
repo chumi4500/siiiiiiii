@@ -1,0 +1,180 @@
+(function ($) {
+  'use strict';
+  Drupal.behaviors.countrySelection = {
+    attach: function (context, settings) {
+      jQuery('.country-selection', context).once('countrySelection').each(function () {
+        const selectedCountry = document.cookie.replace(/(?:(?:^|.*;\s*)selectedCountry\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        const buttons = document.querySelectorAll('.country__button a');
+        const navElements = document.querySelector('.header--first-row__last-section');
+
+        navElements.style.display = 'none';
+
+        buttons.forEach(button => {
+          button.addEventListener('click', () => {
+            const link = button.href;
+            // Seconds, minutes, hours days, in order correspondingly.
+            let expiryTime = 60 * 60 * 24 * 60;
+            document.cookie = `selectedCountry=${link}; path=/; max-age=${expiryTime}`;
+          });
+        });
+
+        if (selectedCountry) {
+          window.location.href = selectedCountry;
+        }
+        else {
+          const bodyHidden = document.querySelector('.body-hidden');
+          bodyHidden.classList.remove('body-hidden');
+        }
+      });
+    }
+  };
+}(jQuery));
+;
+(function ($) {
+  'use strict';
+  Drupal.behaviors.addCookieCountry = {
+    attach: function (context, settings) {
+      $(document).ready(function () {
+        const buttons = document.querySelectorAll('.header ul.links li a');
+        buttons.forEach(button => {
+          button.addEventListener('click', () => {
+            const link = button.href;
+            document.cookie = `selectedCountry=${link}; path=/;`;
+          }, true);
+        });
+      });
+      jQuery('.header', context).once('addCookieCountry').each(function () {
+        const selectedCountry = document.cookie.replace(/(?:(?:^|.*;\s*)selectedCountry\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        const currentUrl = window.location.href;
+        const currentUrlPath = window.location.pathname;
+        const frontPages = [
+          '/',
+          '/es-cr',
+          '/es-sv',
+          '/es-gt',
+          '/es-pa',
+          '/es-hn',
+          '/es-ni',
+          '/es-bs',
+          '/es-ky',
+        ];
+        if (frontPages.includes(currentUrlPath)) {
+          if (selectedCountry) {
+            if (currentUrl != selectedCountry) {
+              window.location.href = selectedCountry;
+            }
+          }
+          else {
+            if (currentUrlPath != frontPages[0]) {
+              window.location.href = frontPages[0];
+            }
+          }
+        }
+      });
+    }
+  };
+}(jQuery));
+;
+(function ($, Drupal) {
+  'use strict';
+  Drupal.behaviors.exchangeRate = {
+    attach: function (context) {
+      let exchangeRate = [];
+
+      function startAnimation(target, value, prefix) {
+        document.getElementById(target).innerHTML = prefix + value.toString(2);
+      }
+
+      // Get country code and currency.
+      function getCountryCodeCurrency(country) {
+        switch (country.find('name').text()) {
+          case 'Panam�':
+            return ['es-pa', 'B/.'];
+          case 'Honduras':
+            return ['es-hn', 'L.'];
+          case 'Guatemala':
+            return ['es-gt', 'Q'];
+          case 'Nicaragua':
+            return ['es-ni', 'C$'];
+          case 'Costa Rica':
+            return ['es-cr', '¢'];
+          case 'El Salvador':
+            return ['es-sv', '$'];
+          default:
+            return undefined;
+        }
+      }
+
+      // Fetch, parser and rearrenge XML.
+      const getExchangeRates = () => {
+        const values = [];
+
+        return fetch(
+          'https://www.sucursalelectronica.com/exchangerate/showXmlExchangeRate.do',
+        )
+          .then(response => response.text())
+          .then(str => new window.DOMParser().parseFromString(str, 'text/xml'))
+          .then(data => {
+            const countries = $(data).find('country');
+            if (countries.length) {
+              $.each(countries, (index, item) => {
+                const country = $(item);
+                const results = getCountryCodeCurrency(country);
+                if (results) {
+                  values[results[0]] = {
+                    currency: results[1],
+                    buyRateUSD: country.find('buyRateUSD').text(),
+                    buyRateEUR: country.find('buyRateEUR').text(),
+                    saleRateUSD: country.find('saleRateUSD').text(),
+                    saleRateEUR: country.find('saleRateEUR').text(),
+                  };
+                }
+              });
+            }
+            return values;
+          });
+      };
+
+      // Update the buy and sell fields.
+      function setExchangeRate() {
+        const code = $('.exchange-rate__button.active').attr('data-code');
+        const saleRateValue = exchangeRate[`saleRate${code}`];
+        const buyRateValue = exchangeRate[`buyRate${code}`];
+
+        startAnimation('buying-rate', buyRateValue, exchangeRate.currency);
+        startAnimation('selling-rate', saleRateValue, exchangeRate.currency);
+      }
+
+      // Component Init.
+      async function exchangeRateInit() {
+        const currentLanguage = drupalSettings.currentLanguage;
+        const exchangeRates = await getExchangeRates();
+        exchangeRate = exchangeRates[currentLanguage];
+        console.log('currentLanguage', currentLanguage);
+        console.log('exchangeRate', exchangeRate);
+
+        if (exchangeRate) {
+          setExchangeRate();
+        } else {
+          $('.exchange-rate').remove();
+        }
+      }
+
+      // Component event handling.
+      function handleEvents() {
+        $('.exchange-rate__button').on('click', event => {
+          if (!$(event.target).hasClass('active')) {
+            $('.exchange-rate__button').toggleClass('active');
+            setExchangeRate();
+          }
+        });
+      }
+
+      jQuery('.exchange-rate', context).once('exchange-rate').each(() => {
+        exchangeRateInit();
+        handleEvents();
+      });
+    }
+  };
+}(window.jQuery, window.Drupal));
+;

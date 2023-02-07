@@ -1,0 +1,72 @@
+/**
+ * Plugin creado para crear pasos de wizard generico
+ * 
+ * @author CodeBreakers
+ * @version 1.0
+ * 
+ * Descripcion de uso
+ * 
+ * $('#contenedorEjemplo').createWizard(pasos, mensajesdePasos, mensajeNumeros, pasoSeleccionado);
+ * 
+ * Los parametros son los pasos que se debe mostrar, con el texto y el numero del paso por cada paso
+ * en un arreglo y el paso seleccionado.
+ * 
+ * messagesStep = [];
+ * messagesStep.push(<fmt:message key="common.label.wizard.step1" />);
+ * messagesStep.push(<fmt:message key="common.label.wizard.step2" />);
+ * messagesStep.push(<fmt:message key="common.label.wizard.step3" />);
+ * 
+ * $('#contenedorEjemplo').createWizardProcessStep(3, messagesStep, messagesNumber, 1);
+ */
+//Carga JQuery en caso de que no se este cargando en la pagina
+validateJQuery();
+
+$.fn.createWizardProcessStep = function(cantidadPasos, messagesStep, pasoSeleccionado) {
+	var clazz="wizardGestion";
+	if(messagesStep.length===2){
+		clazz="twoStepsWizardGestion";
+		cantidadPasos=messagesStep.length;
+	}
+	var processList = $('<ul class="'+clazz+'"></ul>');
+	for (var i = 0; i < cantidadPasos; i++) {
+		var step = $('<li class="wizardStepInactive"><label id="step'+ (i+1) + '">'+ messagesStep[i] + '</label><span>' + (i+1) + '</span></li>');
+		if((i+1) == pasoSeleccionado){
+			step = $('<li class="wizardStepActive"><label id="step'+ (i+1) + '">'+ messagesStep[i] + '</label><span>' + (i+1) + '</span></li>');
+		}else if((i+1) < pasoSeleccionado){
+			step = $('<li class="wizardStepCompleted"><label id="step'+ (i+1) + '">'+ messagesStep[i] + '</label><span class="completeStep">&#10003;</span></li>');
+		}
+		processList.append(step);
+	};
+	this.append(processList);
+}
+
+
+
+function validateJQuery(callback){
+	 //Valida si JQuery esta indefinido
+	 if(undefined == $ || 'undefined' == typeof $){
+		 	//En caso de que JQuery se esta ejecutando en la variable gloabal wIndow lo tome de ahi
+			if(undefined != window.$j){
+				//Define $ que se ejecuta en window.$j
+				$ = window.$j;
+				if(callback){ callback();}
+			//En caso de no tener JQuery cargado se encarga de cargar el archivo de la vesion 1.7.2	
+			}else{
+				//Se crea el tag script con el tipo y la ruta del archivo
+				var jQueryFileScript = document.createElement('script');
+				jQueryFileScript.type='text/javascript';
+				jQueryFileScript.src='/ebac/js/common/jquery-1.7.2.js';
+				jQueryFileScript.async = 1;
+				//Se agrega al body
+				document.getElementsByTagName('body')[0].appendChild(jQueryFileScript);
+				//Metodo que se encarga de cargar el archivo	
+				jQueryFileScript.onload = jQueryFileScript.onreadystatechange = function( _, isAbort ) {
+				    if(isAbort || !jQueryFileScript.readyState || /loaded|complete/.test(jQueryFileScript.readyState) ) {
+				    	jQueryFileScript.onload = jQueryFileScript.onreadystatechange = null;
+				    	jQueryFileScript = undefined;
+				        if(!isAbort) { if(callback){ callback();} }
+				   }
+				};
+			}
+		}
+}

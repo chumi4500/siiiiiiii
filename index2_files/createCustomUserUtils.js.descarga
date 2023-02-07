@@ -1,0 +1,945 @@
+// createCustomUserUtils.js
+// aarroyo, earaya-interfaz. 13/05/2016
+
+/** Expresión regular caracteres especiales. */
+var RE_SPECIAL_CHARACTER = new RegExp("\\W", "g"); 
+/** Expresión regular letras. */
+var LETTERS = new RegExp("[a-zA-Z]"); 
+/** Contador de solicitudes que ha realizado el usuario.*/
+var userRequestCount = 0;
+/** Almacena la disponibilidad del nombre de usuario consultado.*/
+var isUserNameAvailable = false;
+/**
+ Muestra la pantalla de aceptación de términos y condiciones de uso
+ una vez que el usuario ha sido creado
+*/
+function showUseTerms(){
+	var userName = document.getElementById("idUser").value;
+	
+	var nameSpace = document.getElementById("finalUserName");	
+	var nameSpaceText = document.createElement("p");
+	nameSpaceText.id = "selectedUserStyle"; 
+	var addText = document.createTextNode(userName);
+	nameSpaceText.appendChild(addText);
+	nameSpace.appendChild(nameSpaceText);
+
+	document.getElementById("createUserForm").style.display="none";
+	document.getElementById("useTerms").style.display="block";
+	document.getElementById("informativeBox").style.display="block";
+	document.getElementById("selectedUser").style.display="block";
+}
+
+
+/**
+Permite controlar los submits dobles. Muestra un mensaje si el usuario intenta
+hacer doble submit.
+*/
+var submitCount = 0;
+function validSubmitLocal() {
+	if(submitCount == 0){
+		if(!document.getElementById('isChecked').checked){
+	    	//alert(checkTheOption);
+	    	ShowCustomAlert(checkTheOption);
+	    	return false;
+	    }
+	}else{
+		//alert(waitPlease); 
+		addDialogToPage();
+		return false;
+	}
+	submitCount++;
+    document.getElementById("GenericContractForm").submit();
+}
+
+
+	/**
+	 * Método ajax para solicitar el usuario sugerido generado por el sistema
+	 */
+    function executeAjax(){
+		 $.ajax({
+			  dataType: "text",
+		      contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+			  cache: false,
+			  type: "POST",
+			  url: "/ebac/module/createUser/showSuggestedUser.go",
+			  timeout: 3000000,
+			  
+			  // Mostramos un mensaje con la respuesta de Java
+			  success: function(xml, status){
+				$("#idSuggestUser").append(xml);
+				$("#userSuggestedId").show();
+			  },
+			  error: function(XMLHttpRequest, textStatus, errorThrown){
+				 
+			  },
+			  beforeSend : function(xhr) {	
+				  xhr.setRequestHeader("Accept-Charset","utf-8");
+				  xhr.overrideMimeType('text/html; charset=UTF-8');				  
+		}});
+    }
+    
+	/**
+	 * Action para mostrar el cuadro de validacion 
+	 * del campo de usuario
+	 */
+	function validateUserfocus(){
+		$('#user_info').show();	
+		$('#arrowup').show();			
+	}
+
+	/**
+	 * Action para ocultar el cuadro de validacion 
+	 * del campo de usuario
+	 */
+	function validateUserblur(){
+		$('#user_info').hide();	
+		$('#arrowup').hide();		
+	}
+
+
+	var isValidUserLength = false;
+	var isValidUserCharacteres = false;
+	var isValidUserSpecialCharacteres = false;
+	
+	/**
+	 * Validaciones de usuario
+	 * @param idUser
+	 */
+	function validateUser(idUser){
+		canShowConfirm = false;
+		validateUserLength(idUser);
+		validateSpecialCharacteres(idUser,RE_SPECIAL_CHARACTER,"#specialCharacters",1);	
+		validateCharacteres(idUser,LETTERS,"#letters",minLettersLength);		
+	}
+	/**
+	 * Validaciones de extension usuario
+	 * @param idUser
+	 */
+	function validateUserLength(idUser){
+		if (parseInt(minUserLength) > 0) {
+			if ((idUser.length < parseInt(minUserLength)) || (idUser.length > parseInt(maxUserLength)) ) {
+			    $('#longitud').removeClass('user_valid').addClass('user_invalid');
+			    isValidUserLength = false;
+			} else {
+			    $('#longitud').removeClass('user_invalid').addClass('user_valid');
+			    isValidUserLength = true;
+			}
+		}	
+	}
+	/**
+	 * Validaciones de caracteres especiales en el nombre de usuario
+	 * @param idUser
+	 * @param regex
+	 * @param id
+	 * @param minLettersLength
+	 */
+	function validateSpecialCharacteres(idUser,regex,id,minLettersLength){
+		if (minLettersLength > 0 ){
+			var strmatch  = idUser.match(regex);
+			if ( (strmatch == null) && idUser != ""){
+				$(id).removeClass('user_invalid').addClass('user_valid');
+				isValidUserSpecialCharacteres = true;
+		 	}else{
+		 		$(id).removeClass('user_valid').addClass('user_invalid');
+		 		isValidUserSpecialCharacteres = false;
+		 	}
+		}
+	}
+	
+	/**
+	 * Validaciones de caracteres en el nombre de usuario
+	 * @param idUser
+	 * @param regex
+	 * @param id
+	 * @param minLettersLength
+	 */
+	function validateCharacteres(idUser,regex,id,minLettersLength){
+		if (minLettersLength > 0 ){
+			var strmatch  = idUser.match(regex);
+			
+			var lettersLength = idUser.replace(/[^a-zA-Z.]+/g,'');
+		
+			
+			if ( (strmatch == null) || (lettersLength.length < parseInt(minLettersLength))){
+		 		$(id).removeClass('user_valid').addClass('user_invalid');
+		 		isValidUserCharacteres = false;
+		 	}else{
+		 		$(id).removeClass('user_invalid').addClass('user_valid');
+		 		isValidUserCharacteres = true;
+		 	}
+		}
+	}
+
+	/**
+	 * Establecer el usuario sugerido
+	 */
+	function setSuggestUser(){
+	  $("#idUser").val($("#idSuggestUser").text());
+	  $( '#idUser' ).removeClass( "failure" ).addClass( "successful" );
+	  $("#idSuggestUser").css("color", "#394457");
+	  document.getElementById("userNotAvailableId").style.display="none";	
+	  var userValue = $("#idUser").val();
+	  validateUser(userValue);
+	  isUserNameAvailable = true;
+	  canShowConfirm = true;
+	}
+
+	/**
+	 * Valida y ejecuta la solicitud de consulta de usuario 
+	 */
+	var timeout;
+	function validateUserName(userName){
+		canShowConfirm = false;
+		if(isValidUserLength && isValidUserCharacteres && isValidUserSpecialCharacteres){
+			clearTimeoutFunction();
+			timeout = setTimeout(getAvailabilityUserName, time);
+		} else {
+			clearTimeoutFunction();
+			$( '#idUser' ).removeClass( "failure" );
+			$( '#idUser' ).removeClass( "successful" );
+		}		
+	}
+	function clearTimeoutFunction() {
+	    clearTimeout(timeout);
+	}
+	/**
+	 *
+	 */
+	function showLoadingImage(){
+		document.getElementById("loadingImageId").style.display="block";		
+	}
+	/**
+	 *
+	 */
+	function hideLoadingImage(){
+	   document.getElementById("loadingImageId").style.display="none";	 
+	}
+	
+	
+	/**
+	 * 
+	 */
+	function getAvailabilityUserName(){
+		document.getElementById("userNotAvailableId").style.display="none";
+		showLoadingImage();
+		var values = {username: "" +  $("#idUser").val() };
+		 $.ajax({
+			  dataType:"json",
+		      contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+			  cache: false,
+			  type: "POST",
+			  url: "/ebac/module/createUser/getAvailabilityUserName.go",
+			  data: values,
+			  timeout: 3000000,
+			  
+			  // Mostramos un mensaje con la respuesta de Java
+			  success: function(xml, status){
+			  	canShowConfirm = true;
+				if(xml){
+					$( '#idUser' ).removeClass( "failure" ).addClass( "successful" );
+					document.getElementById("userNotAvailableId").style.display="none";
+					isUserNameAvailable = true;
+				} else {
+					$( '#idUser' ).removeClass( "successful" ).addClass( "failure" );
+					document.getElementById("userNotAvailableId").style.display="block";
+					isUserNameAvailable = false;
+					
+					userRequestCount++;
+					if(userRequestCount == displayUserSuggested){
+						executeAjax();
+					}
+				}
+				hideLoadingImage();
+				DisplayUserHelperMessage(isUserNameAvailable);
+			  },
+			  error: function(XMLHttpRequest, textStatus, errorThrown){
+				 
+			  },
+			  beforeSend : function(xhr) {	
+				  xhr.setRequestHeader("Accept-Charset","utf-8");
+				  xhr.overrideMimeType('text/html; charset=UTF-8');				  
+		}});
+	}
+
+
+	var isConfirmed = false;
+	function validateCreateCustomUser(){
+		if(isUserNameAvailable && $("#idUser").val() != "" && isValidUserLength && isValidUserCharacteres && isValidUserSpecialCharacteres){
+			if(!isConfirmed){
+				if(canShowConfirm){
+					ShowConfirmPopUp(document.getElementById("idUser").value);
+					return true;
+				}
+			}else{
+				addDialogToPage();
+			}	
+		}else {
+			ShowCustomAlert(userInvalidmessage);
+			//alert(userInvalidmessage);	
+		}
+		return false;
+	}
+	
+	function createCustomUserAjax(){
+		var values = {username: "" +  $("#idUser").val() };
+		 $.ajax({
+			  dataType:"json",
+		      contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+			  cache: false,
+			  type: "POST",
+			  url: "/ebac/module/createUser/doCreateCustomUser.go",
+			  data: values,
+			  timeout: 3000000,
+			  
+			// Mostramos un mensaje con la respuesta de Java
+			  success: function(xml, status){
+				  closeDialogLoading();
+				  if(xml){
+					  showUseTerms();
+					} else {
+						ShowCustomAlert(userAvailablemessage);
+						//alert(userAvailablemessage);
+						isConfirmed = false;
+					}
+				  submitCount = 0;		  
+			  },
+			  error: function(XMLHttpRequest, textStatus, errorThrown){
+			  	ShowCustomAlert(userAvailablemessage);
+				  //alert(userAvailablemessage);
+				  submitCount = 0;
+			  },
+			  beforeSend : function(xhr) {	
+				  xhr.setRequestHeader("Accept-Charset","utf-8");
+				  xhr.overrideMimeType('text/html; charset=UTF-8');					  
+		}});		 
+	}
+		
+	/**
+	 *  Muestra un mensaje de ayuda al usurio
+	 *  después de una cantidad de intentos fallidos
+	 */
+	var noUserAviableCount = 0;
+	function DisplayUserHelperMessage(state){
+		
+		if(state == false){
+			noUserAviableCount++;
+		}	
+		if(noUserAviableCount >= displayUserHelperMessage){
+			document.getElementById("helperUserMessage").style.display="block";
+		}
+	}
+	
+/**
+	Muestra un mensaje de confirmación que bloquea la página para mostrar
+	un mensaje determinado al usuario
+*/
+var isPopUpActive = false;
+var isPopUpWaiting = false;
+var canShowConfirm = false;
+function ShowConfirmPopUp(userName){	
+	if(!isPopUpActive){
+		/* Div que bloque la pagina mientras carga */
+		var frontDialogDiv = document.createElement("div");
+		frontDialogDiv.id = "loading-lock-dialog";	
+
+		/* Div del PopUp de confirmación carga */	
+		var loaderDialogDiv = document.createElement("div");
+		loaderDialogDiv.id = "dialog-lock-content";
+
+		/* Titúlo de nombre seleccionado */
+		var userSelected = document.createElement("p");
+		userSelected.id = "dialog-lock-text_1";
+		var userSelectedText = document.createTextNode(userPreSelected);
+		userSelected.appendChild(userSelectedText);
+		loaderDialogDiv.appendChild(userSelected);
+
+	    /* Nombre de usuario seleccionado */
+		var finalUserName = document.createElement("p");
+		finalUserName.id = "dialog-lock-title_1";
+		var finalUserNameText = document.createTextNode(userName);
+		finalUserName.appendChild(finalUserNameText);
+		loaderDialogDiv.appendChild(finalUserName);
+
+		/* Texto de información sobre nombre de usuario */
+		var infoUserName = document.createElement("p");
+		infoUserName.id = "dialog-lock-text_2";
+		var infoUserNameText = document.createTextNode(userRemider);
+		infoUserName.appendChild(infoUserNameText);
+		loaderDialogDiv.appendChild(infoUserName);
+
+		/* Texto de confirmación sobre nombre de usuario */
+		var userConfirm = document.createElement("p");
+		userConfirm.id = "dialog-lock-text_3";
+		var userConfirmText = document.createTextNode(wantContinue);
+		userConfirm.appendChild(userConfirmText);
+		loaderDialogDiv.appendChild(userConfirm);
+		
+
+		/* Botón de cerrar el dialogo */
+		var loaderButtonCancel = document.createElement("button");
+		loaderButtonCancel.id = "dialog-cancel-button";
+		var buttonCancelarText = document.createTextNode(buttonCancel);
+		loaderButtonCancel.appendChild(buttonCancelarText);
+		loaderDialogDiv.appendChild(loaderButtonCancel);	
+
+		/* Botón de cerrar el dialogo */
+		var loaderButtonOk = document.createElement("button");
+		loaderButtonOk.id = "dialog-Ok-button";
+		var buttonOkText = document.createTextNode(buttonContinue);
+		loaderButtonOk.appendChild(buttonOkText);
+		loaderDialogDiv.appendChild(loaderButtonOk);
+
+		/* Se agrega dialogo en la página */
+		document.body.insertBefore(frontDialogDiv, document.body.firstChild);
+		document.body.insertBefore(loaderDialogDiv, document.body.firstChild);
+		isPopUpActive = true;
+	}
+	
+
+		document.getElementById('dialog-Ok-button').onclick = function(){
+			document.getElementById('loading-lock-dialog').style.display = "none";
+			document.getElementById('dialog-lock-content').style.display = "none";
+			isPopUpActive = false;
+			isConfirmed = true;
+			//Se muestra el Dialogo de Loading
+			addDialogToPage();
+			//Se crea el usuario elegido
+			createCustomUserAjax();
+
+		};		
+
+		document.getElementById('dialog-cancel-button').onclick = function(){
+			document.getElementById('loading-lock-dialog').style.display = "none";
+			document.getElementById('dialog-lock-content').style.display = "none";
+			isPopUpActive = false;
+			isConfirmed = false;
+		};	
+			
+	
+}
+
+
+/**
+	Muestra un Alert personalizado que bloquea la página para mostrar
+	un mensaje determinado al usuario
+*/
+var isAlertActive = false;
+var isAlertWaiting = false;
+function ShowCustomAlert(alertText){	
+	if(!isAlertActive){
+		/* Div que bloque la pagina mientras carga */
+		var frontDialogDiv = document.createElement("div");
+		frontDialogDiv.id = "loading-lock-dialog";	
+
+		/* Div del mensaje de alerta */	
+		var loaderDialogDiv = document.createElement("div");
+		loaderDialogDiv.id = "dialog-lock-content";
+
+		/* Contenido central del mensaje de alerta */	
+		var loaderDialogCenter = document.createElement("div");
+		loaderDialogCenter.id = "dialog-lock-centrar";
+
+		/* Titúlo de nombre seleccionado */
+		var userSelected = document.createElement("p");
+		userSelected.id = "dialog-lock-text_4";
+		var userSelectedText = document.createTextNode(alertText);
+		userSelected.appendChild(userSelectedText);
+		loaderDialogCenter.appendChild(userSelected);
+
+		/* Botón de cerrar el dialogo */
+		var loaderButtonOk = document.createElement("button");
+		loaderButtonOk.id = "dialog-Ok-button_1";
+		var buttonOkText = document.createTextNode(buttonAccept);
+		loaderButtonOk.appendChild(buttonOkText);
+		loaderDialogCenter.appendChild(loaderButtonOk);
+
+		/* Se agrega contenido central */
+		loaderDialogDiv.appendChild(loaderDialogCenter);
+
+		/* Se agrega dialogo en la página */
+		document.body.insertBefore(frontDialogDiv, document.body.firstChild);
+		document.body.insertBefore(loaderDialogDiv, document.body.firstChild);
+		isAlertctive = true;
+	}
+	
+		document.getElementById('dialog-Ok-button_1').onclick = function(){
+			document.getElementById('loading-lock-dialog').style.display = "none";
+			document.getElementById('dialog-lock-content').style.display = "none";
+			isAlertActive = false;
+		};	
+	
+}
+
+function closePopup(idElement1, idElement2) {
+	document.getElementById(idElement1).style.display = "none";
+	document.getElementById(idElement2).style.display = "none";
+}
+
+/**
+ * Permite solo dÃ­gitos numÃ©ricos y un tamaÃ±o definido
+ * autor Earaya|Interfazsoftware. 27-06-16
+ * @returns {Boolean}
+ */
+function justNumbers(num, max, inputID, isCardEnabled, country){
+    var keynum = window.event ? window.event.keyCode : num.which; 
+    var actualLength = document.getElementById(inputID).value.length;
+    if (country != null){
+    	if(country != 'PA'){
+    		max = PinLength;
+    	}
+    }
+    if(isCardEnabled != true){
+    	max = accountMaxLength;
+    }
+    
+    if(actualLength >= max && keynum != 8){
+    	return false;
+    }
+ 
+    if(keynum == 8){
+    	return true;
+    }
+    
+    return /\d/.test(String.fromCharCode(keynum));
+}
+
+/**
+ * Muestra el cuadro de ayuda de email al usuario
+ * autor Earaya|Interfazsoftware. 27-06-16
+ * @returns {Boolean}
+ */
+
+ function showPopUpEmailHelper(active){
+if(active == true){
+ 		document.getElementById("userInputFormEmail").style.display = "block";
+ 	}else{
+ 		document.getElementById("userInputFormEmail").style.display = "none";	
+ 	}	
+ }
+ 
+ /**
+  * Muestra el cuadro de ayuda de productos al usuario
+  * autor Earaya|Interfazsoftware. 27-06-16
+  * @returns {Boolean}
+  */
+  function showPopUpProductHelper(active){
+  	if(active == true){
+  		document.getElementById("userInputProduct").style.display = "block";
+  	}else{
+  		document.getElementById("userInputProduct").style.display = "none";	
+  	}	
+  }
+  
+   
+  /**
+   * Valida que los campos del formulario de creación de usuario hayan sido llenados apropiadamente.
+   * @para form formulario que se va a evaluar.
+   * @return true si el formulario es válido, false en caso contrario.
+   */
+  function validateEnrollmentUser(form){
+      var error = false;
+      // el campo de producto es requerido y tiene que ser válido.
+      if (!error && document.getElementById("inputProduct").value == ''){
+          error = true;
+          ShowCustomAlert(invalidProductBlank, false);
+          document.getElementById("inputProduct").focus();
+      }        
+      if (!error && !isProductValid(document.getElementById("inputProduct").value.length)){
+          error = true;
+          ShowCustomAlert(invalidProductLength, false);
+          document.getElementById("inputProduct").focus();
+      }
+      
+   	// el campo de correo pin bancamatic es requerido y tiene que ser válido.
+      if (!error && document.getElementById("pass").value == ''){
+          error = true;
+          ShowCustomAlert(invalidPassBlank, false);
+          document.getElementById("pass").focus();
+      }        
+      if (!error && !isPinValid(document.getElementById("pass").value.length)){
+          error = true;
+          ShowCustomAlert(invalidPassLength, false);
+          document.getElementById("pass").focus();
+      }
+
+       return (!error && validSubmit());
+  }
+  
+  /**
+	  *Valida los campos de codigo de empleado en enrollment
+	  *
+	  */
+    function validateEnrollmentEmployeeInfoSubmit(){
+	  if(document.getElementById("employeeInfo") && 
+	  document.getElementById("employeeInfo").value == ''){
+		  var employeeInfo = document.getElementById("employeeInfo");
+		  var employeeId = document.getElementById("employeeId");
+		  var employeeBrach = document.getElementById("employeeBrach");
+		  
+		  if(employeeId.value != '' && employeeBrach.value != ''){
+			  employeeInfo.value = employeeBrach.value+'-'+employeeId.value;
+		  }else if(employeeId.value != '') {
+			  employeeInfo.value = employeeId.value;  		 	  
+		  }else{
+			  employeeInfo.value = '';
+		  }  
+	  }
+    }
+  
+  /**
+   * Valida que los campos del formulario de creación de nuevo usuario hayan sido llenados apropiadamente.
+   * @para form formulario que se va a evaluar.
+   * @return true si el formulario es válido, false en caso contrario.
+   */
+  function validateCreateNewUser(form, buttonId, withPass){
+      
+	  validateEnrollmentEmployeeInfoSubmit();
+	 
+	  var btn = document.getElementById(buttonId);
+      var error = false;
+	  
+	  if(btn.disabled != false){
+		  return false;
+	  }
+      // el campo de producto es requerido y tiene que ser válido.
+      if (!error && document.getElementById("inputProduct").value == ''){
+          error = true;     
+          //document.getElementById("product").focus();
+          setElementState("inputProductError", "inputProduct", true, invalidProductBlank);
+      }        
+      if (!error && !isProductValid(document.getElementById("inputProduct").value.length)){
+          error = true;
+          //document.getElementById("product").focus();
+          setElementState("inputProductError","inputProduct", true, invalidProductLength);
+      }
+      
+      
+      // (Formulario 1) el campo de correo pin bancamatic es requerido y tiene que ser válido.
+      if(withPass == false && document.getElementById("accesspin").style.display != "none"){
+	      if (document.getElementById("accesspin") != null && !error && document.getElementById("accesspin").value == ''){
+	          error = true;
+	          //document.getElementById("accesspin").focus();
+	          setElementState("inputPassError", "accesspin", true, invalidPassBlank);
+	      }        
+	      if (document.getElementById("accesspin") != null && !error && !isPinValid(document.getElementById("accesspin").value.length)){
+	          error = true;
+	          //document.getElementById("accesspin").focus();
+	          setElementState("inputPassError", "accesspin", true, invalidPassLength);
+	      }
+      }else if(withPass == true){
+      // (Formulario 2) el campo de correo pin bancamatic es requerido y tiene que ser válido.
+	      if (document.getElementById("pass") != null && !error && document.getElementById("pass").value == ''){
+	          error = true;
+	          //document.getElementById("pass").focus();
+	          setElementState("inputPassError02", "pass", true, invalidPassBlank);
+	      }        
+	      if (document.getElementById("pass") != null && !error && !isPinValid(document.getElementById("pass").value.length)){
+	          error = true;
+	          //document.getElementById("pass").focus();
+	          setElementState("inputPassError02", "pass", true, invalidPassLength);
+	      }else if(document.getElementById("pass") != null){
+	    	  
+	    	  document.getElementById("accesspin").value = document.getElementById("pass").value;
+	      }
+      }
+       return (!error && validSubmit());
+  }
+  
+  
+  /**
+   * Valida el tamaÃ±o de cuenta o tarjeta
+   * autor Earaya|Interfazsoftware. 27-06-16
+   * @returns {Boolean}
+   */
+  var productValid = true;
+  function isProductValid(valueLength){
+  	productValid = false;
+  	if(valueLength >= accountMinLength && valueLength <= accountMaxLength){
+  		productValid = true; 
+  		
+  	/* cardEnabled: verifica si la tarjeta esta activa para el pais */	
+  	}else if(cardEnabled == true  && valueLength >= cardMinLength && valueLength <= cardMaxLength){
+  		productValid = true;
+  	}
+  	return productValid;
+  }
+  
+ /**
+   * Cambia el estado de los elementos
+   * true: Error, false: Normal
+   * autor Earaya|Interfazsoftware. 20-09-16
+   */
+  function setElementState(label, input, state, errorMessage){
+	  var aLabel = document.getElementById(label);
+	  var aInput = document.getElementById(input);
+	  
+	  if(aLabel != null){
+		  if(state == false && aLabel.innerHTML != ""){
+			  aLabel.innerHTML = "";
+		  }else{
+			  aLabel.innerHTML = errorMessage; 
+		  }
+	  }
+	  
+	  if(aInput != null){
+		  if(state == false){
+			  aInput.className = aInput.className.replace("input-color-Error",""); 
+		  }else{
+			  aInput.className = aInput.className+" input-color-Error"; 
+		  } 
+	  }
+  }
+  
+  
+  /**
+   * Habilita o desabilita un boton
+   * autor Earaya|Interfazsoftware. 23-09-16
+   */
+  function enabledButton(inputList, buttonId){
+	  var noEmptyInputs = true;
+	  var btn = document.getElementById(buttonId);
+	  var input;
+	  
+	  for(var i=0; i<inputList.length; i++){
+		  input = document.getElementById(inputList[i]);
+		  
+		  if(input != null && input.value.length < PinLength && input.style.display != "none"){
+			  noEmptyInputs = false;
+		  }
+	  }
+	  if(noEmptyInputs == true){	  
+		  btn.className = btn.className.replace("disableBtn","primaryBtn");		  
+		  btn.disabled = false;
+	  }else{
+		  btn.className = btn.className.replace("primaryBtn","disableBtn");
+		  btn.disabled = true;
+	  }
+  }
+  
+  /**
+   * Oculta o muestra un elemento
+   * autor Earaya|Interfazsoftware. 26-09-16
+   */
+  function showElementById(elementId, show){
+	  var element = document.getElementById(elementId);
+	  if(element != null){
+		  if(show == true){
+			  element.style.display = "block";
+		  }else{
+			  element.style.display = "none";
+		  }
+	  }
+  }
+  
+  /**
+   * Oculta o muestra un elemento con efecto de cortina
+   * autor Earaya|Interfazsoftware. 26-09-16
+   */
+  function showElementByIdSlide(elementId, show){
+	  var element = "#"+elementId;
+	  if(element != null){
+		  if(show == true){
+			  $(element).slideDown(500);
+			  $('html, body').animate({scrollTop:$(document).height()}, 500);
+		  }else{
+			  $(element).slideUp(500);	  
+		  }
+		  
+	  }
+	  
+	  /*para que el watchman sepa que el flujo regreso*/
+	  if(elementId=='divaccesspin' && show==false){
+		  localStorage.setItem("enrollmentFlowFlagStep1.4", 0);
+	  }
+  }
+  
+  /**
+   * Oculta o muestra la opcion de código de empleado
+   * autor Earaya|Interfazsoftware. 09-01-16
+   */
+  var showFormOption = true;
+  function showFormOptions(elementId){
+	  var element = document.getElementById(elementId);
+	  var icon = document.getElementById("formOptionsIcon");
+	  if(element != null){
+		  if(showFormOption == true){
+			  element.style.visibility = "visible";
+			  icon.className = "form-options-icon-image-on";
+			  showFormOption = false;
+		  }else{
+			  element.style.visibility = "hidden";
+			  icon.className = "form-options-icon-image";
+			  showFormOption = true;
+		  }
+	  }
+  }
+  
+  /**
+   * Oculta o muestra la opcion de código de empleado
+   * autor Earaya|Interfazsoftware. 09-01-16
+   */
+  function hiddenFormOptions(elementId){
+	  var element = document.getElementById(elementId);
+	  var icon = document.getElementById("formOptionsIcon");
+	  if(element != null){
+		  element.style.visibility = "hidden";
+		  icon.className = "form-options-icon-image";
+		  showFormOption = true;
+	  }
+  }
+  
+  /**
+   * Cambia estado de flecha en combo
+   * autor Earaya|Interfazsoftware. 10-10-16
+   * @returns {Boolean}
+   */
+  var secondClickOnCombo = false;
+  function setComboArrow(comboId, isOpen){
+	  var combo = document.getElementById(comboId);
+	  if(isOpen == true && secondClickOnCombo == false){
+		  combo.className = "createUserComboDown";
+		  secondClickOnCombo = true;
+	  }else{
+		  combo.className = "createUserCombo";
+		  secondClickOnCombo = false;
+	  }
+  }
+
+  /**
+   * Valida que los campos del formulario de creación de nuevo usuario hayan sido llenados apropiadamente.
+   * @para form formulario que se va a evaluar.
+   * @return true si el formulario es válido, false en caso contrario.
+   */
+  function validateOtpForRequestCreationUser(form, buttonId){
+	  
+	  var btn = document.getElementById(buttonId);
+      var error = false;
+	  
+	  if(btn.disabled != false){
+		  return false;
+	  }  
+       return (!error && validSubmit());
+  }
+
+  
+  function setSubmitForm(formAction, formID){
+	  document.getElementById(formID).action = formAction;
+	  showElementByIdSlide('divaccesspin', false); 
+	  
+	  showElementByIdSlide('accesspin', false);
+	  enabledButton(['product','accesspin'],'buttonContinue01');	  
+  }
+  
+  
+  /**
+   * Valida el tamaño de pin bancamatic
+   * autor Earaya|Interfazsoftware. 27-06-16
+   * @returns {Boolean}
+   */
+  var passValid = false;
+  function isPinValid(valueLength){
+	  passValid = false;
+     	if(selectedCountry == 'PA' && valueLength == PinMaxLength){
+	   		passValid = true; 
+   		} else if (selectedCountry == 'NI' && valueLength == PinLength){
+   			passValid = true;
+   		}
+	  if(valueLength == PinLength || valueLength == PinMaxLength){
+    		passValid = true; 
+	  }
+	  return passValid;
+  }
+
+  /**
+   * Verifica si el pin de bancamatic es correcto
+   * autor lsalas 31-10-16
+   * @returns {Boolean}
+   */
+
+  function checkPin(){
+	  if (invalidPin != ''){
+		  document.getElementById("accesspin").focus();
+		  setElementState("inputPassError", "accesspin", true, invalidPinMessage);
+	  }
+  }
+  
+  
+  /**
+   * Muestra o culta el link de ayuda para pin
+   * autor Earaya|Interfazsoftware. 10-01-16
+   * @returns {Boolean}
+   */
+  var linkPassHelpShow = false;
+  function showHiddenLinkPassHelp(){		  
+	  var link = document.getElementById("linkPassHelp");
+	  if(linkPassHelpShow == true){	  
+		  link.className = "link-form link-arrow-down ";
+		  document.getElementById("divLinkPassHelp").style.display="block";
+		  showElementByIdSlide("divLinkPassHelp", false);
+		  linkPassHelpShow = false;
+		  
+	  }else{
+		  link.className = "link-form link-arrow-up";
+		  document.getElementById("divLinkPassHelp").style.display="block";
+		  showElementByIdSlide("divLinkPassHelp", true);
+		  linkPassHelpShow = true;
+	  }
+  }	  
+
+  /**
+   * Muestra confirmación para salir del proceso enrollment
+   * autor Earaya|Interfazsoftware. 10-01-16
+   */
+  function showExitModal(show) {
+	  if(show == true){
+		  document.getElementById("logOutModal").style.display = "block";
+	  }else{
+		  document.getElementById("logOutModal").style.display = "none";
+	  }
+  }
+  
+  /**
+   * Valida los campos de código de empleado en enrollment
+   * autor Earaya|Interfazsoftware. 10-01-16
+   */
+  function validateEnrollmentEmployeeInfo(){
+	  var employeeInfo = document.getElementById("employeeInfo");
+	  var employeeId = document.getElementById("employeeId");
+	  var employeeBrach = document.getElementById("employeeBrach");
+	  
+	  if(employeeId.value != '' && employeeBrach.value != ''){
+		  employeeInfo.value = employeeBrach.value+'-'+employeeId.value;
+	  }else if(employeeId.value != '') {
+		  employeeInfo.value = employeeId.value;  		 	  
+	  }else{
+		  employeeInfo.value = '';
+	  }  
+	  
+	  var isEmployeeCodechecked = document.getElementsByClassName('employeeCodechecked');
+      if (isEmployeeCodechecked.length > 0) {
+	  validateEmployeeCookies();
+  }
+  }
+  
+  /**
+   * Comprueba datos alfanuméricos
+   * autor Earaya|Interfazsoftware. 10-01-16
+   */
+  function isAlphaNumeric(e, text, max) {
+	  		
+      //var k;
+      //document.all ? k=e.keycode : k=e.which;
+      var k = e.which || e.keyCode;
+	  
+	  if(k == 8){
+	    	return true;
+	  }
+	  
+	  if(text.length >= max){
+	  		  return false;
+	  }	
+	  
+      return((k>47 && k<58)||(k>64 && k<91)||(k>96 && k<123)||k==0);
+       
+  };
+ 

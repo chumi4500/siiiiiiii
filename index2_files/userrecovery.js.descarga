@@ -1,0 +1,430 @@
+// userrecovery.js
+//Se incluyen las funciones de validación de javascript.
+//@author aarroyo
+//@version 1.0
+//Fecha: 14-06-2016
+
+/**
+ * Valida el formato de un correo electrónico
+ * autor aarroyo
+ * @returns {Boolean}
+ */
+function isEmailValid(email){
+	var emailValid = false;	
+	var regExp = RegExp (emailValidationRegularExpression);
+	if(regExp.test(email)){
+		emailValid = true;	
+	} 
+    return emailValid;
+}
+
+function goToCountry(country){
+	if(getCookie("BACId"))
+		setBacId(country.value);
+
+	window.location = '/ebac/module/userrecovery/showUserRecovery.go?selectedCountry=' + country.value + '&reloadByCountry=true';
+	
+	return result;
+}
+
+function setBacId(country) {
+	deleteCookie("BACId");
+	deleteCookie("countrySelectedBACId");
+	keepCookie("countrySelectedBACId", "selectedCountry=" + country);
+	var idCountry = "OTR";
+	switch (country) {
+		case "CR":
+	    	idCountry = "CRI";
+	    	break;
+	    case "NI":
+		    idCountry = "NIC";
+		    break;
+		case "GT":
+		     idCountry = "GUA";
+		    break;
+		case "PA":
+		    idCountry = "PAN";
+		    break;
+		case "SV":
+		    idCountry = "SAL";
+		    break;
+		case "HN":
+		    idCountry = "HON";
+		    break;
+		default:
+		    idCountry = "OTR";
+	}
+	keepCookie("BACId", newBACId.replace("%idCountry%", idCountry));
+}
+
+/**
+ * Valida que los campos del formulario de creación de usuario hayan sido llenados apropiadamente.
+ * @para form formulario que se va a evaluar.
+ * @return true si el formulario es válido, false en caso contrario.
+ */
+function confirmUserRecoverySubmit(form){
+    var error = false;
+    // el campo de producto es requerido y tiene que ser válido.
+    if (!error && document.getElementById("ProductInput").value == ''){
+        error = true;
+        ShowCustomAlert(invalidProductBlank, false);
+        document.getElementById("ProductInput").focus();
+    }        
+    if (!error && !isProductValid(document.getElementById("ProductInput").value.length)){
+        error = true;
+        ShowCustomAlert(invalidProductLength, false);
+        document.getElementById("ProductInput").focus();
+    }
+    
+ 	// el campo de correo electrónico es requerido y tiene que ser válido.
+    if (!error && document.getElementById("EmailInput").value == ''){
+        error = true;
+        ShowCustomAlert(invalidBlankEmailLabel, false);
+        document.getElementById("EmailInput").focus();
+    }        
+    // el campo de correo electrónico es requerido y tiene que ser válido.
+    if (!error && !isEmail(document.getElementById("EmailInput").value)){
+        error = true;
+        ShowCustomAlert(invalidFormatEmailLabel, false);
+       document.getElementById("EmailInput").focus();
+    }
+  
+    if(showCaptcha == 'showCaptcha'){
+    	if(document.getElementById("g-recaptcha-response")){
+		    // el campo de correo electrónico es requerido y tiene que ser válido.
+		    if (!error && document.getElementById("g-recaptcha-response").value == ''){
+		    	 ShowCustomAlert(requiredCaptchaLabel, false);
+		        error = true;
+		    }  
+    	}
+    }   
+    
+    if(!error){
+    	document.getElementById("recoveryUserForm").submit();
+    }
+    
+}
+
+
+/**
+ * Valida el tamaño de cuenta o tarjeta
+ * autor earaya->[IFZ]. 27-06-16
+ * @returns {Boolean}
+ */
+var productValid = true;
+function isProductValid(valueLength){
+	productValid = false;
+		
+	if(valueLength >= accountMinLength && valueLength <= accountMaxLength){
+		productValid = true; 
+	}
+	/* cardEnabled: verifica si la tarjeta esta activa para el pais */
+	else if(cardEnabled == true && valueLength >= cardMinLength && valueLength <= cardMaxLength){
+		productValid = true;
+	}
+	return productValid;
+}
+
+
+/**
+ * Muestra el cuadro de ayuda de productos al usuario
+ * autor earaya->[IFZ]. 27-06-16
+ * @returns {Boolean}
+ */
+ function showPopUpProductHelper(active){
+ 	if(active == true){
+ 		document.getElementById("userInputProduct").style.display = "block";
+ 	}else{
+ 		document.getElementById("userInputProduct").style.display = "none";	
+ 	}	
+ }
+
+ /**
+ * Muestra el cuadro de ayuda de email al usuario
+ * autor earaya->[IFZ]. 27-06-16
+ * @returns {Boolean}
+ */
+
+ function showPopUpEmailHelper(active){
+if(active == true){
+ 		document.getElementById("userInputEmail").style.display = "block";
+ 	}else{
+ 		document.getElementById("userInputEmail").style.display = "none";	
+ 	}	
+ }
+
+ /**
+ * Permite solo dígitos numéricos y un tamaño definido
+ * autor earaya->[IFZ]. 27-06-16
+ * @returns {Boolean}
+ */
+function justNumbers(num, max, inputID, isCardEnabled){
+    var keynum = window.event ? window.event.keyCode : num.which; 
+    var actualLength = document.getElementById(inputID).value.length;
+    
+    if(isCardEnabled != true){
+    	max = accountMaxLength;
+    }
+    
+    if(actualLength >= max && keynum != 8){
+    	return false;
+    }
+    
+    if(keynum == 8){
+    	return true;
+    }
+
+    if(keynum == 8){
+    	return true;
+    }
+
+    return /\d/.test(String.fromCharCode(keynum));
+}
+
+
+ /**
+	Muestra un Alert personalizado que bloquea la página para mostrar
+	un mensaje determinado al usuario
+*/
+var isAlertActive = false;
+var isAlertWaiting = false;
+var dialogStyleSize = "";
+var centerDivSize = "";
+var linkPosition = "";
+var mainTextPosition = "";
+
+function ShowCustomAlert(mainText, closeButton, tittle, secondText, secondTittle, link){	
+	if(!isAlertActive){
+		/* Div que bloque la pagina mientras carga */
+		var frontDialogDiv = document.createElement("div");
+		frontDialogDiv.id = "loading-lock-dialog";	
+
+		if(secondText == null){
+			dialogStyleSize = "dialog-lock-content";
+			centerDivSize = "dialog-lock-central";	
+			linkPosition = "dialog-lock-link";
+		}else{
+			dialogStyleSize = "big-dialog-lock-content";
+			centerDivSize = "big-dialog-lock-central";	
+			linkPosition = "big-dialog-lock-link";	
+		}
+
+		/* Div del mensaje de alerta */	
+		var loaderDialogDiv = document.createElement("div");
+		loaderDialogDiv.id = dialogStyleSize;
+
+		/* Contenido central del mensaje de alerta */	
+		var loaderDialogCenter = document.createElement("div");
+		loaderDialogCenter.id = centerDivSize;
+		
+		/* link para Web Chat */
+		if(link != null){	
+			var webChatLink = document.createElement("a");
+			webChatLink.id = linkPosition;
+			webChatLink.href = link;
+			var textWebChatLink = document.createTextNode("Web Chat");
+			webChatLink.appendChild(textWebChatLink);
+			loaderDialogCenter.appendChild(webChatLink);
+			mainTextPosition = "dialog-lock-text_6";
+		}else{
+			mainTextPosition = "dialog-lock-text_4";
+		}
+
+		/* Titúlo del dialogo */
+		if(tittle != null){		
+			var mainTittle = document.createElement("p");
+			mainTittle.id = "dialog-main-tittle";
+			var tittleText = document.createTextNode(tittle);
+			mainTittle.appendChild(tittleText);
+			loaderDialogCenter.appendChild(mainTittle);
+		}
+
+		/* texto principal del dialogo */
+		var mainParagraph = document.createElement("p");
+		mainParagraph.id = mainTextPosition;
+		var mainParagraphText = document.createTextNode(mainText);
+		mainParagraph.appendChild(mainParagraphText);
+		loaderDialogCenter.appendChild(mainParagraph);
+
+		/* texto secundario del dialogo */
+		if(secondText != null){	
+			var secondParagraph = document.createElement("p");
+			secondParagraph.id = "dialog-lock-text_5";
+			var secondParagraphText = document.createTextNode(secondText);
+			secondParagraph.appendChild(secondParagraphText);
+			loaderDialogCenter.appendChild(secondParagraph);
+		}
+
+		if(secondTittle != null){
+			var Tittle2 = document.createElement("p");
+			Tittle2.id = "dialog-second-tittle";
+			var Tittle2Text = document.createTextNode(secondTittle);
+			Tittle2.appendChild(Tittle2Text);
+			loaderDialogCenter.appendChild(Tittle2);
+		}
+
+		/* Botón de cerrar el dialogo */
+		if(closeButton){
+			var loaderButtonOk = document.createElement("button");
+			loaderButtonOk.id = "dialog-Ok-button_1";
+			var buttonOkText = document.createTextNode(buttonExit);
+			loaderButtonOk.appendChild(buttonOkText);
+			loaderDialogCenter.appendChild(loaderButtonOk);
+		}else{
+			var loaderButtonOk = document.createElement("button");
+			loaderButtonOk.id = "dialog-Ok-button_1";
+			var buttonOkText = document.createTextNode(buttonAccept);
+			loaderButtonOk.appendChild(buttonOkText);
+			loaderDialogCenter.appendChild(loaderButtonOk);
+		}
+
+		/* Se agrega contenido central */
+		loaderDialogDiv.appendChild(loaderDialogCenter);
+
+		/* Se agrega dialogo en la página */
+		document.body.insertBefore(frontDialogDiv, document.body.firstChild);
+		document.body.insertBefore(loaderDialogDiv, document.body.firstChild);
+		isAlertctive = true;
+	}
+
+	if(closeButton){
+		document.getElementById('dialog-Ok-button_1').onclick = function(){
+			document.getElementById('loading-lock-dialog').style.display = "none";
+			document.getElementById(dialogStyleSize).style.display = "none";
+			isAlertActive = false;
+			window.close();
+		};
+	}else{
+		document.getElementById('dialog-Ok-button_1').onclick = function(){
+			document.getElementById('loading-lock-dialog').style.display = "none";
+			document.getElementById(dialogStyleSize).style.display = "none";
+			isAlertActive = false;
+		};	
+	}
+}
+
+var isHelpAlertActive = false;
+var mainTextWidth = "";
+function ShowCustomAlertHelp(mainText,  link, country,webChatMessage){	
+	if(!isHelpAlertActive){
+		/* Div que bloque la pagina mientras carga */
+		var frontDialogDiv = document.createElement("div");
+		frontDialogDiv.id = "loading-lock-dialog";	
+
+		if(country != "MX"){
+			dialogStyleSize = "dialog-lock-content";
+			centerDivSize = "dialog-lock-central";	
+			linkPosition = "dialog-lock-link";	
+			mainTextWidth = "dialog-lock-text_4";
+		} else {
+			dialogStyleSize = "dialog-lock-content";
+			centerDivSize = "dialog-lock-central";	
+			linkPosition = "medium-dialog-lock-link";	
+			mainTextWidth = "dialog-lock-text_4_fix";
+		
+		}
+
+		/* Div del mensaje de alerta */	
+		var loaderDialogDiv = document.createElement("div");
+		loaderDialogDiv.id = dialogStyleSize;
+
+		/* Contenido central del mensaje de alerta */	
+		var loaderDialogCenter = document.createElement("div");
+		loaderDialogCenter.id = centerDivSize;
+	
+		/* texto principal del dialogo */
+		var mainParagraph = document.createElement("p");
+		mainParagraph.id = mainTextWidth;
+		var mainParagraphText = document.createTextNode(mainText);
+		mainParagraph.appendChild(mainParagraphText);
+		loaderDialogCenter.appendChild(mainParagraph);
+
+		
+		/* link para Web Chat */
+		if(country!= "BS" && link != null){	
+			var webChatLink = document.createElement("a");
+			webChatLink.id = linkPosition;
+			webChatLink.href = link;
+			var textWebChatLink = document.createTextNode(webChatMessage);
+			webChatLink.appendChild(textWebChatLink);
+			loaderDialogCenter.appendChild(webChatLink);
+		}
+
+		/* Botón de cerrar el dialogo */
+			var loaderDialogClose = document.createElement("div");
+			loaderDialogClose.id = "dialog-close-button";
+			loaderDialogDiv.appendChild(loaderDialogClose);	
+
+		/* Se agrega contenido central */
+		loaderDialogDiv.appendChild(loaderDialogCenter);
+
+		/* Se agrega dialogo en la página */
+		document.body.insertBefore(frontDialogDiv, document.body.firstChild);
+		document.body.insertBefore(loaderDialogDiv, document.body.firstChild);
+		isHelpAlertActive = true;
+	}
+   
+		document.getElementById('dialog-close-button').onclick = function(){
+			document.getElementById('loading-lock-dialog').style.display = "none";
+			document.getElementById(dialogStyleSize).style.display = "none";
+			isHelpAlertActive = false;
+		};
+		document.getElementById('loading-lock-dialog').onclick = function(){
+			document.getElementById('loading-lock-dialog').style.display = "none";
+			document.getElementById(dialogStyleSize).style.display = "none";
+			isHelpAlertActive = false;
+		};
+		
+}
+
+
+/**
+ * Valida que los campos del OTP del formulario de creación de usuario hayan sido llenados apropiadamente.
+ * @para form formulario que se va a evaluar.
+ * @return true si el formulario es válido, false en caso contrario.
+ */
+function confirmOTPUserRecoverySubmit(){
+	var otpValid = true;
+    // el campo de producto es requerido y tiene que ser válido.
+    if (document.getElementById("otp").value == ''){
+    	otpValid = false;
+    	messageKeyLabel == 'invalidOtp';
+        ShowCustomAlert(invalidOTPLength, false);
+        document.getElementById("otp").focus();
+        return false;
+    }        
+    else if (!(document.getElementById("otp").value.length == maxSizeOTPLength)){
+    	otpValid = false;
+    	messageKeyLabel == 'invalidOTPLength';
+		ShowCustomAlert(invalidOtp, false);
+        document.getElementById("otp").value = '';    
+        document.getElementById("otp").focus();
+        return false;
+    }
+    else {
+    	otpValid = true;
+    }
+     if(otpValid && validSubmit()){
+		document.getElementById("recoveryUserForm").submit();
+   }
+     return otpValid;
+}
+
+
+function recoveryPasswordSubmiteForm(){
+	document.getElementById("recoveryPasswordFormId").submit();
+}
+
+
+function fixMessageHelpPosition(selectedCountry){
+	var messageProductHelper = document.getElementById("userInputProduct");
+	if(selectedCountry == 'PA'){
+		messageProductHelper.classList.add('fixProductHelperPosPA');
+	}else if(selectedCountry == 'MX'){
+		messageProductHelper.classList.add('fixProductHelperPosMX');
+	}else{
+		document.getElementById("userInputProduct").classList.add('fixProductHelperPos');
+	}
+	document.getElementById("userInputEmail").classList.add('fixEmailHelperPos');
+}
+
